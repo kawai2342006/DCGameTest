@@ -1100,7 +1100,7 @@ function updateModeControl() {
   const toggle = document.getElementById('soulsModeToggle');
   toggle.setAttribute('aria-checked', String(soulsMode));
   toggle.textContent = soulsMode ? '🔥 魂系模式：開' : '魂系模式：關';
-  document.getElementById('soulsModeStatus').textContent = soulsMode ? '一命到底 · 敗北即結束本局 · 第 6 關隱藏挑戰' : '普通模式 · 5 關 · 敗北可調整站位重試';
+  document.getElementById('soulsModeStatus').textContent = soulsMode ? '一命到底 · 敗北即結束本局 · 不能調位重試' : '普通模式 · 5 關 · 敗北可調整站位重試';
 }
 function toggleSoulsMode() {
   if (modeLocked || currentStage !== 1 || playerRoster.length > 0) return;
@@ -1422,18 +1422,33 @@ function showAugmentDraft(isBonus = false) {
 }
 
 // ================= 4. 鏡像對手生成 (第2關起才有安迪 & 宿敵完成後鎖定) =================
+// 固定強隊：只指定角色及站位，不更改數值、星級或技能。
+// 按現有角色池過濾整套隊伍，宿敵事件完成後不會補回已封鎖的角色。
+const HIDDEN_ENEMY_TEAMS = [
+  ['mouse_sis', 'icy_sis', 'loki', 'dc_tesla', 'shijie_sis'],
+  ['mouse_sis', 'ansir', 'hugo', 'dashen', 'loki'],
+  ['andy', 'mouse_sis', 'loki', 'dc_tesla', 'stock_opp'],
+  ['st_sis', 'mouse_sis', 'loki', 'dc_tesla', 'andy']
+];
+function getHiddenEnemyTemplates(pool) {
+  const byId = new Map(pool.map(hero => [hero.id, hero]));
+  const teams = HIDDEN_ENEMY_TEAMS.filter(ids => ids.length === 5 && new Set(ids).size === 5 && ids.every(id => byId.has(id)));
+  if (teams.length === 0) return getRandomItems(pool, 5); // 未來角色 ID 更換時安全後備
+  const ids = teams[Math.floor(Math.random() * teams.length)];
+  return ids.map(id => byId.get(id));
+}
 function generateEnemyTeam(stage) {
   const hiddenStage = soulsMode && stage === 6;
   const enemyCount = hiddenStage ? 5 : Math.min(stage, 4);
-  // 隱藏關只新增第五名敵人；星級機率與數值沿用第 5 關，不另加倍率。
+  // 隱藏關使用五人強隊；星級機率與數值沿用第 5 關，不另加倍率。
   const balanceStage = hiddenStage ? 5 : stage;
   const pool = getEligibleHeroPool(stage, true);
-  let templates = getRandomItems(pool, enemyCount);
+  let templates = hiddenStage ? getHiddenEnemyTemplates(pool) : getRandomItems(pool, enemyCount);
 
   // 【宿命引力 35%】：僅在第 2 關之後、且尚未完成宿敵事件時才會觸發
   const allyHasOpp = playerRoster.some(u => u.id === 'stock_opp');
   const allyHasAndy = playerRoster.some(u => u.id === 'andy');
-  if (stage >= 2 && !nemesisEventCompleted && (allyHasOpp || allyHasAndy) && Math.random() < 0.35) {
+  if (!hiddenStage && stage >= 2 && !nemesisEventCompleted && (allyHasOpp || allyHasAndy) && Math.random() < 0.35) {
     const nemesisId = allyHasOpp ? 'andy' : 'stock_opp';
     if (!templates.some(t => t.id === nemesisId)) {
       const nemesisTemplate = HERO_POOL.find(h => h.id === nemesisId);
@@ -1629,9 +1644,9 @@ function triggerVisualEffect(unit,type,text='') {
 
 function updateUI() {
   hideTooltip();
-  document.getElementById('stageDisplay').innerText = `第 ${currentStage} / ${getFinalStage()} 關${soulsMode ? ' · 🔥 魂系' : ''}`;
+  document.getElementById('stageDisplay').innerText = `第 ${currentStage} / ${currentStage > maxStage ? getFinalStage() : maxStage} 關${soulsMode ? ' · 🔥 魂系' : ''}`;
   document.getElementById('allyCount').innerText = `${playerRoster.length} / 4`;
-  document.getElementById('enemyStageName').innerText = soulsMode && currentStage === 6 ? `🔥 隱藏終局 · 5 人守門隊` : currentStage === 5 ? (soulsMode ? '🔥 第 5 關大佬 · 終局未至' : '🔥 最終關大佬隊伍') : `第 ${currentStage} 關鏡像守衛`;
+  document.getElementById('enemyStageName').innerText = soulsMode && currentStage === 6 ? `🔥 隱藏終局 · 5 人守門隊` : currentStage === 5 ? '🔥 最終關大佬隊伍' : `第 ${currentStage} 關鏡像守衛`;
 
   const syn = getActiveSynergies(playerRoster);
   const synEl = document.getElementById('synergyList');
