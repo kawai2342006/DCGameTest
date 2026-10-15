@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DC BON 全明星自動戰棋 v3.1</title>
+<title>DC BON 全明星自動戰棋 v3.1｜動態戰鬥版</title>
 <style>
   :root {
     --bg-dark: #1e1f22;
@@ -561,12 +561,77 @@ button:focus-visible,summary:focus-visible {outline:3px solid #a5f5ee;outline-of
 @media(prefers-reduced-motion:reduce) {.unit-card {transition:none;}}
 
 </style>
+<style>
+/* 2.5D presentation from the original still illustrations. No new bitmap assets. */
+#combatFX {position:fixed;inset:0;z-index:24;width:100%;height:100%;pointer-events:none!important;contain:strict;}
+.ambient-motion {position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;opacity:.65;}
+.ambient-motion::before,.ambient-motion::after {content:'';position:absolute;inset:-15%;pointer-events:none;}
+.ambient-motion::before {background:radial-gradient(ellipse at 10% 70%,#42d8d61c,transparent 43%),radial-gradient(ellipse at 85% 30%,#ae6bff20,transparent 40%);animation:harbourMist 23s ease-in-out infinite alternate;}
+.ambient-motion::after {background:radial-gradient(circle at 12% 78%,#acffdf99 0 1px,transparent 2px),radial-gradient(circle at 37% 50%,#c8adff88 0 1px,transparent 2px),radial-gradient(circle at 62% 82%,#85dfff88 0 1px,transparent 2px),radial-gradient(circle at 84% 23%,#ffe0a288 0 1px,transparent 2px);background-size:490px 410px;animation:harbourDust 27s linear infinite;opacity:.4;}
+.motion-final .ambient-motion::before {background:radial-gradient(ellipse at 8% 60%,#ffa95725,transparent 45%),radial-gradient(ellipse at 90% 25%,#c05bff27,transparent 45%);}
+.hero-art {perspective:850px;--tilt-x:0deg;--tilt-y:0deg;}
+.hero-art .art-open {transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y));transition:transform .3s ease;transform-origin:50% 50%;}
+.hero-art .art-open img {transform:scale(1.035);transition:filter .35s ease;}
+.hero-art.motion-visible .art-open img {animation:portraitBreath 7s var(--portrait-phase,0ms) ease-in-out infinite;}
+.hero-art .art-open:hover img {transform:scale(1.035);}
+.hero-art::before,.hero-art::after {content:'';position:absolute;inset:0;pointer-events:none;z-index:1;}
+.hero-art::before {background:linear-gradient(115deg,transparent 25%,#e4fffa00 41%,#f5fffb29 50%,#e4fffa00 59%,transparent 75%);transform:translateX(-135%);opacity:0;}
+.hero-art.motion-visible::before {animation:portraitSheen 9s var(--portrait-phase,0ms) ease-in-out infinite;}
+.hero-art::after {background:radial-gradient(circle at 17% 72%,var(--hero-accent,#8ffff0) 0 1px,transparent 3px),radial-gradient(circle at 81% 33%,var(--hero-accent,#8ffff0) 0 1px,transparent 3px),linear-gradient(0deg,#070d251a,transparent 70%);opacity:.55;}
+.hero-art.motion-visible::after {animation:portraitEmbers 7s var(--portrait-phase,0ms) ease-in-out infinite;}
+.art-caption {z-index:2;}.art-view-hint {z-index:3;}
+.hero-art[data-art="dc_tesla"]::after,.hero-art[data-art="ansir"]::after,.hero-art[data-art="aming"]::after {background:linear-gradient(120deg,transparent 0 76%,#8de5ff44 76.1% 76.5%,transparent 76.6%),radial-gradient(ellipse at 75% 85%,#76d9ff39,transparent 60%);}
+.hero-art[data-art="andy"]::after {background:radial-gradient(circle at 78% 17%,#ffd9a788 0 2px,transparent 4px),radial-gradient(ellipse at 60% 90%,#e4782338,transparent 62%);}
+.hero-art[data-art="andy_opp_fused"]::after {background:linear-gradient(110deg,#ffcd7422,transparent 45%,#be8dff25),radial-gradient(circle at 22% 40%,#ffe2ac 0 1px,transparent 3px);}
+.hero-art[data-art="mouse_sis"]::after,.hero-art[data-art="st_sis"]::after {background:radial-gradient(circle at 22% 72%,#b4ffcf99 0 2px,transparent 4px),radial-gradient(ellipse at 50% 100%,#69ffb523,transparent 60%);}
+.hero-art[data-art="loki"]::after,.hero-art[data-art="hugo"]::after {background:linear-gradient(125deg,transparent 0 30%,#b4dcff2c 30.1% 30.6%,transparent 30.8%),radial-gradient(ellipse at 75% 20%,#b09dff29,transparent 55%);}
+.dead .hero-art .art-open img,.dead .hero-art::before,.dead .hero-art::after {animation:none!important;}
+.dead .hero-art::before,.dead .hero-art::after {display:none;}
+body[data-phase="battle"] .unit-card .hero-art::before {animation:none;opacity:0;}
+body[data-phase="battle"] .unit-card .hero-art::after {opacity:.35;}
+body[data-fx-level="rich"] .hero-art {box-shadow:0 0 0 1px #b7e5ef22,0 8px 24px #0005;}
+body[data-fx-level="rich"] .motion-visible.hero-art::after {opacity:.75;}
+body[data-fx-level="light"] .hero-art .art-open img,body[data-fx-level="light"] .hero-art::before,body[data-fx-level="light"] .hero-art::after {animation:none;}
+body[data-fx-level="light"] .hero-art .art-open {transform:none;}
+body[data-fx-level="light"] .ambient-motion {display:none;}
+.motion-reduced #combatFX,.motion-reduced .ambient-motion {display:none!important;}
+.motion-reduced .hero-art .art-open,.motion-reduced .hero-art .art-open img,.motion-reduced .hero-art::before,.motion-reduced .hero-art::after {animation:none!important;transition:none!important;transform:none!important;}
+.motion-reduced .hero-art::before {display:none;}
+.motion-page-hidden .hero-art .art-open img,.motion-page-hidden .hero-art::before,.motion-page-hidden .hero-art::after,.motion-page-hidden .ambient-motion::before,.motion-page-hidden .ambient-motion::after {animation-play-state:paused!important;}
+.hide-card-art .hero-art {display:none!important;}
+@keyframes portraitBreath {0%,100% {transform:scale(1.035) translate3d(-.35%,.2%,0);}50% {transform:scale(1.065) translate3d(.35%,-.4%,0);}}
+@keyframes portraitSheen {0%,60% {transform:translateX(-135%);opacity:0;}65% {opacity:.65;}80% {transform:translateX(135%);opacity:0;}100% {transform:translateX(135%);opacity:0;}}
+@keyframes portraitEmbers {0%,100% {transform:translate3d(0,0,0);opacity:.3;}50% {transform:translate3d(0,-5px,0);opacity:.65;}}
+@keyframes harbourMist {from {transform:translate3d(-2%,1%,0) scale(1.02);}to {transform:translate3d(3%,-2%,0) scale(1.07);}}
+@keyframes harbourDust {from {transform:translate3d(0,1%,0);}to {transform:translate3d(0,-12%,0);}}
+@media(max-width:800px) {
+  .hero-art .art-open {transform:none!important;}
+  .hero-art::before {display:none;}
+  .ambient-motion::after {display:none;}.ambient-motion {opacity:.4;}
+  .mobile-tactical .unit-card .hero-art {display:none!important;}
+  .hero-art.motion-visible .art-open img {animation-duration:9s;}
+}
+@media(prefers-reduced-motion:reduce) {
+  #combatFX,.ambient-motion {display:none!important;}
+  .hero-art .art-open,.hero-art .art-open img,.hero-art::before,.hero-art::after {animation:none!important;transition:none!important;transform:none!important;}
+  .hero-art::before {display:none;}
+}
+.art-viewer:not(.hidden) #artViewerImage {animation:viewerFloat 8s ease-in-out infinite;transform-origin:center;}
+@keyframes viewerFloat {0%,100% {transform:scale(1) translateY(0);}50% {transform:scale(1.012) translateY(-2px);}}
+.motion-reduced #artViewerImage,.reduce-effects #artViewerImage {animation:none!important;transform:none!important;}
+.motion-page-hidden #artViewerImage {animation-play-state:paused!important;}
+body[data-fx-level="light"] #artViewerImage {animation:none!important;}
+@media(prefers-reduced-motion:reduce){#artViewerImage {animation:none!important;transform:none!important;}}
+
+</style>
 </head>
 <body>
+<div class="ambient-motion" aria-hidden="true"></div>
+<canvas id="combatFX" aria-hidden="true"></canvas>
 
 <header>
   <div class="title-area">
-    <h1>♟️ DC BON 全明星自動戰棋 <span style="font-size:0.75rem; color:var(--text-muted);">v3.1 霓虹獎勵場景版</span></h1>
+    <h1>♟️ DC BON 全明星自動戰棋 <span style="font-size:0.75rem; color:var(--text-muted);">v3.1 動態戰鬥版</span></h1>
   </div>
   <div class="header-right">
     <button type="button" class="codex-btn" id="cardArtBtn" aria-pressed="true" title="顯示或隱藏角色插畫，收起後可騰出更多空間觀看戰況" onclick="GameReading.toggleArt()">🖼 卡圖：開</button>
@@ -574,6 +639,8 @@ button:focus-visible,summary:focus-visible {outline:3px solid #a5f5ee;outline-of
       <button type="button" class="codex-btn" id="compactBtn" aria-pressed="true" onclick="GameUI.toggleCompact()">手機精簡戰場：開</button>
       <p>精簡戰場使用角色圖示；關閉精簡可顯示完整卡片與卡圖。</p>
       <button type="button" class="codex-btn" id="textSizeBtn" aria-pressed="false" onclick="GameReading.toggleText()">字級 A＋</button>
+      <button type="button" class="codex-btn" id="fxLevelBtn" onclick="BattleFX.cycle()">動態風格：標準</button>
+      <p>沿用原插畫嘅 2.5D 動態及戰鬥特效。手機自動減量；減少特效優先停用動畫。</p>
       <button type="button" class="codex-btn" id="motionBtn" aria-pressed="false" onclick="GameReading.toggleMotion()">◌ 特效：開</button>
       <button type="button" class="codex-btn" onclick="openCodex();document.getElementById('settingsMenu').open=false">📘 遊戲圖鑑</button>
       <button type="button" class="btn btn-danger" onclick="resetGame();document.getElementById('settingsMenu').open=false">🔄 重新開局</button>
@@ -1045,6 +1112,7 @@ const GameReading = (() => {
     document.body.classList.toggle('reduce-effects',!motion);
     document.body.classList.toggle('large-copy',large);
     document.body.classList.toggle('hide-card-art',!art);
+    window.BattleFX?.refresh();
     const artBtn = document.getElementById('cardArtBtn');
     if (artBtn) {
       artBtn.setAttribute('aria-pressed',String(art));
@@ -1195,6 +1263,260 @@ const SceneFX = (() => {
 </script>
 <div class="modal-overlay unit-detail-modal hidden" id="unitDetailModal" role="dialog" aria-modal="true" aria-labelledby="unitDetailTitle" onclick="if(event.target===this)GameUI.closeUnit()"><div class="modal-content"><div class="unit-detail-toolbar"><h2 id="unitDetailTitle"></h2><button type="button" class="codex-btn" id="unitDetailClose" onclick="GameUI.closeUnit()">✕ 關閉</button></div><div id="unitDetailBody"></div></div></div>
 <script>
+/* Cosmetic effects only. Does not consume gameplay RNG or write combat state. */
+const BattleFX = (() => {
+  const canvas = document.getElementById('combatFX');
+  let context = null;
+  try { context = canvas?.getContext?.('2d') || null; } catch {}
+  const raf = typeof window.requestAnimationFrame === 'function';
+  const supported = !!context && raf;
+  const media = matchMedia('(prefers-reduced-motion: reduce)');
+  let level = 'standard', pending = [], active = [], frame = 0, lastFrame = -100, serial = 0;
+  let width = 0, height = 0, dpi = 1, protectedRects = [];
+  try { const saved=localStorage.getItem('dcbon-fx-level');if(['standard','rich','light'].includes(saved))level=saved; } catch {}
+  const profiles = {
+    mouse_sis:['mint','#8be9a9'],st_sis:['heal','#65e4ce'],icy_sis:['frost','#b8aeff'],
+    shijie_sis:['shot','#ff929b'],dc_tesla:['lightning','#76d9ff'],stock_opp:['market','#76e3b2'],
+    satsuki:['star','#f6a4df'],loki:['rift','#6be6bd'],andy:['meteor','#ffb967'],
+    aming:['code','#6fdcff'],dashen:['divine','#f5d58d'],hugo:['slash','#a9b7ff'],
+    dv:['slash','#ff8f80'],dvp:['guard','#f5bf74'],ansir:['lightning','#f1de70'],
+    lg:['divine','#aed6ff'],andy_opp_fused:['fusion','#f5d588'],baemon:['star','#eda7ff']
+  };
+  const mobile = () => (window.innerWidth || 1200) <= 800;
+  const enabled = () => supported && !GameReading.reduced() && !document.hidden;
+  const limit = () => mobile() ? (level==='light'?10:20) : level==='rich'?64:level==='light'?16:40;
+  const key = u => u ? `${u.isAlly?'ally':'enemy'}:${u.id}` : '';
+  const profile = u => profiles[GameArt.keyFor(u)] || ['slash','#b9d8ed'];
+  function clear() {
+    pending=[];active=[];
+    if(frame && raf)window.cancelAnimationFrame(frame);
+    frame=0;
+    if(context)context.clearRect(0,0,width,height);
+  }
+  function resize() {
+    clear();
+    if(!supported)return;
+    width=window.innerWidth||1200;height=window.innerHeight||900;
+    dpi=Math.min(window.devicePixelRatio||1,mobile()?1.5:2);
+    canvas.width=Math.round(width*dpi);canvas.height=Math.round(height*dpi);
+    context.setTransform(dpi,0,0,dpi,0,0);
+  }
+  function refresh() {
+    document.body.setAttribute('data-fx-level',level);
+    document.body.classList.toggle('motion-reduced',GameReading.reduced());
+    document.body.classList.toggle('motion-page-hidden',!!document.hidden);
+    const btn=document.getElementById('fxLevelBtn');
+    if(btn)btn.textContent=`動態風格：${({standard:'標準',rich:'華麗',light:'簡約'})[level]}`;
+    // Reading preferences may change card dimensions even while effects are on.
+    clear();
+  }
+  function cycle() {
+    level=({standard:'rich',rich:'light',light:'standard'})[level];
+    try {localStorage.setItem('dcbon-fx-level',level);} catch {}
+    clear();refresh();
+  }
+  function phase(next) {
+    if(next!=='battle')clear();
+    // Revealed only after entering the actual hidden stage.
+    document.body.classList.toggle('motion-final',typeof currentStage!=='undefined'&&currentStage===6&&soulsMode);
+  }
+  function queue(unit,type,text='',source=null) {
+    if(!enabled()||!isBattling||!unit)return;
+    const entry={unit,source,type,text,count:Math.min(3,Math.max(0,unit.ritualCount||0))};
+    if(type==='skill' && ['mouse_sis','dc_tesla','loki'].includes(unit.id)) {
+      const allies=unit.isAlly?playerRoster:enemyRoster;
+      entry.mana=allies.filter(u=>u.hp>0).map(u=>({unit:u,mp:u.mp}));
+    }
+    pending.push(entry);
+    if(pending.length>128)pending.shift();
+  }
+  function cardFor(unit) {
+    const roster=unit.isAlly?playerRoster:enemyRoster,idx=roster.indexOf(unit);
+    return idx<0?null:document.getElementById(`${unit.isAlly?'ally':'enemy'}_card_${idx}`);
+  }
+  function anchor(unit,other=null) {
+    const card=unit&&cardFor(unit);if(!card)return null;
+    const r=card.getBoundingClientRect();
+    const right=r.right ?? r.left+r.width,bottom=r.bottom ?? r.top+r.height;
+    if(r.width<=0||r.height<=0||bottom<0||r.top>height||right<0||r.left>width)return null;
+    const art=card.querySelector('.hero-art'),ar=art?.getBoundingClientRect();
+    const artShown=ar&&ar.width>0&&ar.height>0&&!document.body.classList.contains('hide-card-art')&&!(mobile()&&document.body.classList.contains('mobile-tactical'));
+    const towardRight=other ? (other.x>r.left+r.width/2) : unit.isAlly;
+    return {x:towardRight?right-5:r.left+5,y:artShown?Math.max(r.top+10,ar.top+Math.min(ar.height*.38,70)):r.top+11};
+  }
+  function add(kind,from,to,color,style='slash',boost=false,delay=0) {
+    if(!from||!to||active.length>=limit())return;
+    const effect={kind,from,to,color,style,boost,seed:++serial,start:performance.now()+delay,duration:kind==='aura'?640:kind==='mana'?610:boost?720:460};
+    active.push(effect);return effect;
+  }
+  function flush() {
+    const batch=pending;pending=[];
+    if(!enabled()||!isBattling)return;
+    const field=document.getElementById('battleFocus');
+    protectedRects=field?[...field.querySelectorAll('.battle-hud,.battle-events,.team-header,.unit-name,.bars,.pos-tag,.unit-stats,.unit-skill-tag,.unit-detail-btn,.move-btns')].map(node=>node.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0):[];
+    let caster=null,skill=false;const dedupe=new Set();
+    for(const e of batch) {
+      if(e.type==='lunge'){caster=e.unit;skill=false;continue;}
+      if(e.type==='skill'||e.type==='arrival'||e.type==='fusion'||e.type==='ritual') {
+        caster=e.unit;skill=true;
+        const [style,color]=profile(caster),p=anchor(caster);
+        const aura=add('aura',p,p,color,e.type==='ritual'?'ritual':style,true);
+        if(aura)aura.count=e.count;
+        for(const item of e.mana||[])if(item.unit.mp>item.mp) {
+          const to=anchor(item.unit),from=anchor(caster,to);
+          add('mana',from,to,'#8fd8ff','mint',false);
+        }
+        continue;
+      }
+      const source=e.source||caster;
+      if(!source)continue;
+      const [style,color]=profile(source),to=anchor(e.unit),from=anchor(source,to);
+      const id=`${e.type}:${key(source)}:${key(e.unit)}`;
+      if(dedupe.has(id))continue;dedupe.add(id);
+      if(e.type==='hit')add('hit',from,to,color,skill||source.id==='andy_opp_fused'?style:'slash',skill||e.text.includes('CRIT'));
+      if(e.type==='heal')add('heal',from,to,'#88f0bf',style,false,60);
+    }
+    if(active.length&&!frame)frame=window.requestAnimationFrame(draw);
+  }
+  function path(points,color,lineWidth=2,alpha=1) {
+    context.globalAlpha=alpha;context.strokeStyle=color;context.lineWidth=lineWidth;
+    context.beginPath();context.moveTo(points[0].x,points[0].y);
+    for(const p of points.slice(1))context.lineTo(p.x,p.y);
+    context.stroke();
+  }
+  function ring(p,r,color,alpha=1,angle=0) {
+    context.globalAlpha=alpha;context.strokeStyle=color;context.lineWidth=1.5;
+    context.beginPath();context.arc(p.x,p.y,Math.max(.2,r),angle,angle+Math.PI*1.65);context.stroke();
+  }
+  function sparks(p,t,e) {
+    const n=mobile()?4:level==='rich'?12:level==='light'?3:7;
+    const radius=(e.boost?38:24)*t;
+    for(let i=0;i<n;i++) {
+      const a=(i/n)*Math.PI*2+e.seed*.67,dx=Math.cos(a),dy=Math.sin(a);
+      path([{x:p.x+dx*radius*.5,y:p.y+dy*radius*.5},{x:p.x+dx*(radius+5),y:p.y+dy*(radius+5)}],e.color,e.boost?2:1,Math.max(0,1-t)*.7);
+    }
+  }
+  function render(e,t) {
+    const {from:a,to:b,color,style}=e;
+    if(e.kind==='aura') {
+      // Portrait-edge sigils; never a full-screen flash or zoom.
+      const r=(mobile()?9:16)+t*(e.boost?28:18),alpha=(1-t)*.68;
+      ring(b,r,color,alpha,t*2);
+      if(level!=='light')ring(b,r*.65,color,alpha,-t*3);
+      if(style==='fusion')ring(b,r*.85,'#c29dff',alpha,-t*2);
+      if(style==='ritual')for(let i=0;i<(e.count||1);i++)ring(b,r*.3+i*6,color,alpha,t*(i%2?-2:2));
+      if(style==='frost'||style==='guard'||style==='star') {
+        const count=style==='guard'?6:style==='frost'?4:10,points=[];
+        for(let i=0;i<=count;i++) {
+          const a=i/count*Math.PI*2-Math.PI/2+t*.4;
+          const rr=style==='star'&&i%2?r*.4:r*.8;
+          points.push({x:b.x+Math.cos(a)*rr,y:b.y+Math.sin(a)*rr});
+        }
+        path(points,color,1.5,alpha);
+      }
+      if(style==='heal'||style==='divine') {
+        path([{x:b.x-r*.5,y:b.y},{x:b.x+r*.5,y:b.y}],color,2,alpha);
+        path([{x:b.x,y:b.y-r*.5},{x:b.x,y:b.y+r*.5}],color,2,alpha);
+      }
+      return;
+    }
+    const flight=Math.min(1,t/.6),fade=Math.min(1,(1-t)*3),x=a.x+(b.x-a.x)*flight;
+    const arc=e.kind==='heal'||e.kind==='mana'?-Math.sin(flight*Math.PI)*24:0;
+    const y=a.y+(b.y-a.y)*flight+arc;
+    if(t<.65) {
+      if(e.kind==='hit' && (style==='lightning'||style==='code')) {
+        const pts=[a];
+        for(let i=1;i<=8;i++) {const k=i/8;pts.push({x:a.x+(x-a.x)*k,y:a.y+(y-a.y)*k+Math.sin(i*7+e.seed)*8*(i===8?0:1)});}
+        path(pts,color,e.boost?2.6:1.5,fade*.82);
+      } else if(e.kind==='hit' && style==='meteor') {
+        path([{x:b.x-38,y:b.y-85},{x:b.x-38+(38*flight),y:b.y-85+85*flight}],color,5,fade*.85);
+        ring({x:b.x-38+38*flight,y:b.y-85+85*flight},6,color,.8);
+      } else {
+        const tail=Math.max(0,flight-.3),tx=a.x+(b.x-a.x)*tail,ty=a.y+(b.y-a.y)*tail;
+        path([{x:tx,y:ty},{x,y}],color,e.kind==='hit'?(e.boost?3:1.8):2,fade*.75);
+        ring({x,y},e.kind==='mana'?3:4,color,fade*.8);
+        if(style==='fusion')path([{x:tx,y:ty+5},{x,y:y+5}],'#bc9bff',2,fade*.7);
+      }
+    }
+    if(t>=.55) {
+      const impact=(t-.55)/.45;
+      if(e.kind==='heal') {
+        ring(b,8+impact*19,color,fade*.75,-impact);
+        const y=b.y-impact*13;
+        path([{x:b.x-5,y},{x:b.x+5,y}],color,2,fade);
+        path([{x:b.x,y:y-5},{x:b.x,y:y+5}],color,2,fade);
+      } else if(e.kind==='mana')ring(b,5+impact*13,color,fade*.65,impact*3);
+      else {
+        ring(b,5+impact*(e.boost?29:17),color,fade*.8,impact);
+        sparks(b,impact,e);
+        if(style==='rift'||style==='slash')path([{x:b.x-12,y:b.y+15},{x:b.x+12,y:b.y-15}],color,3,fade*.75);
+        if(style==='divine')path([{x:b.x,y:b.y-38*(1-impact)},{x:b.x,y:b.y+14}],color,3,fade*.7);
+        if(style==='market'||style==='code')path([{x:b.x-14,y:b.y+8},{x:b.x-5,y:b.y-5},{x:b.x+3,y:b.y+2},{x:b.x+14,y:b.y-15}],color,2,fade);
+      }
+    }
+  }
+  function draw(now) {
+    frame=0;
+    if(!enabled()){clear();return;}
+    const interval=mobile()||level==='light'?1000/30:1000/60;
+    if(now-lastFrame<interval-1){frame=window.requestAnimationFrame(draw);return;}
+    lastFrame=now;
+    context.clearRect(0,0,width,height);
+    active=active.filter(e=>now<e.start+e.duration);
+    const arena=document.getElementById('battleFocus')?.getBoundingClientRect();
+    context.save();
+    if(arena){context.beginPath();context.rect(arena.left,arena.top,arena.width,arena.height);context.clip();}
+    context.lineCap='round';
+    for(const e of active){const t=(now-e.start)/e.duration;if(t>=0)render(e,Math.min(1,t));}
+    // Erase visual strokes above names, health/mana, statuses and controls.
+    // This never touches the underlying DOM or the actual game values.
+    for(const r of protectedRects)context.clearRect(r.left-2,r.top-2,r.width+4,r.height+4);
+    context.restore();context.globalAlpha=1;
+    if(active.length)frame=window.requestAnimationFrame(draw);
+  }
+  // Observe only visible portrait panels; release removed nodes after every redraw.
+  const visibility = typeof IntersectionObserver==='function' ? new IntersectionObserver(entries=>{
+    entries.forEach(e=>e.target.classList.toggle('motion-visible',e.isIntersecting));
+  },{rootMargin:'40px'}) : null;
+  function portraits(node,added) {
+    if(node.nodeType!==1)return;
+    const arts=node.classList?.contains('hero-art')?[node]:[...node.querySelectorAll('.hero-art')];
+    arts.forEach(art=>{
+      if(!added){visibility?.unobserve(art);return;}
+      art.style.setProperty('--portrait-phase',`-${Math.round(performance.now()%(mobile()?9000:7000))}ms`);
+      visibility?.observe(art);
+    });
+  }
+  const observer=new MutationObserver(records=>records.forEach(record=>{
+    record.removedNodes.forEach(n=>portraits(n,false));record.addedNodes.forEach(n=>portraits(n,true));
+  }));
+  observer.observe(document.body,{childList:true,subtree:true});
+  document.querySelectorAll('.hero-art').forEach(art=>{art.style.setProperty('--portrait-phase',`-${Math.round(performance.now()%(mobile()?9000:7000))}ms`);visibility?.observe(art);});
+  let lastPointer=-100;
+  document.addEventListener('pointermove',e=>{
+    if(e.pointerType!=='mouse'||GameReading.reduced()||mobile()||level==='light')return;
+    const now=performance.now();if(now-lastPointer<32)return;lastPointer=now;
+    const art=e.target.closest?.('.hero-art');if(!art)return;
+    const r=art.getBoundingClientRect();if(!r.width||!r.height)return;
+    const x=Math.max(-1,Math.min(1,(e.clientX-r.left)/r.width*2-1)),y=Math.max(-1,Math.min(1,(e.clientY-r.top)/r.height*2-1));
+    art.style.setProperty('--tilt-x',`${-y*4}deg`);art.style.setProperty('--tilt-y',`${x*5}deg`);
+  });
+  document.addEventListener('pointerout',e=>{
+    const art=e.target.closest?.('.hero-art');if(art&&!art.contains(e.relatedTarget)){art.style.setProperty('--tilt-x','0deg');art.style.setProperty('--tilt-y','0deg');}
+  });
+  if(typeof window.addEventListener==='function') {
+    window.addEventListener('resize',resize,{passive:true});
+    window.addEventListener('scroll',clear,{passive:true});
+  }
+  document.addEventListener('visibilitychange',refresh);
+  media.addEventListener?.('change',refresh);
+  resize();refresh();
+  return {queue,flush,clear,phase,refresh,cycle,profiles,status:()=>({level,pending:pending.length,active:active.length,supported})};
+})();
+window.BattleFX = BattleFX;
+
+</script>
+<script>
 /* Presentation only: no combat state writes, RNG, timers or balance changes. */
 const GameUI = (() => {
   const esc = value => GameText.escape(String(value ?? ''));
@@ -1204,6 +1526,7 @@ const GameUI = (() => {
   const el = id => document.getElementById(id);
   const key = u => `${u.isAlly ? 'ally' : 'enemy'}:${u.id}`;
   function applyCompact() {
+    window.BattleFX?.clear();
     document.body.classList.toggle('mobile-tactical', compact);
     el('compactBtn').setAttribute('aria-pressed', String(compact));
     el('compactBtn').textContent = `手機精簡戰場：${compact ? '開' : '關'}`;
@@ -1214,6 +1537,7 @@ const GameUI = (() => {
     applyCompact();
   }
   function setPhase(next) {
+    BattleFX.phase(next);
     if (phase !== next) {
       phase = next;
       document.body.setAttribute('data-phase', next);
@@ -1223,6 +1547,7 @@ const GameUI = (() => {
     el('phaseLabel').textContent = ({draft:'招募／強化',ready:'備戰 · 可調整站位',battle:'戰鬥進行中',report:'賽後戰報',finished:'本局結束'})[next] || '準備開始';
   }
   function clear() {
+    BattleFX.clear();
     actorKey = ''; targetKeys.clear();
     el('actionLine').textContent = '挑選英雄，組成你嘅全明星小隊。';
     el('eventLine').textContent = '重要技能與聯動會顯示喺呢度。';
@@ -1842,9 +2167,10 @@ function moveUnit(index, dir) {
   updateUI();
 }
 
-function queueVisualEffect(unit, type, text = '') {
+function queueVisualEffect(unit, type, text = '', source = null) {
   if (type === 'hit' && unit.isAlly && unit.hp <= 0) lastFallenAlly = unit;
   GameUI.effect(unit, type);
+  BattleFX.queue(unit, type, text, source);
   visualQueue.push({ unit, type, text });
 }
 
@@ -1852,6 +2178,7 @@ function flushVisualQueue() {
   const batch = visualQueue;
   visualQueue = [];
   batch.forEach(({unit,type,text}) => triggerVisualEffect(unit,type,text));
+  BattleFX.flush();
 }
 
 // 事件特效存在於獨立狀態；重繪卡片也會保留到期前的提示。
@@ -2154,6 +2481,7 @@ function executeNemesisPeace() {
     stats: { dmgDealt: 0, dmgTaken: 0, healed: 0 }
   };
   playerRoster.unshift(fusedUnit);
+  BattleFX.queue(fusedUnit, 'fusion');
 
   document.getElementById('nemesisModal').classList.add('hidden');
   isPausedForEvent = false;
@@ -2471,7 +2799,7 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
 
     if (attacker && attacker.stats) attacker.stats.dmgDealt += dmg;
     if (target.stats) target.stats.dmgTaken += dmg;
-    queueVisualEffect(target, 'hit', `🛡️鎖血 1 HP!`);
+    queueVisualEffect(target, 'hit', `🛡️鎖血 1 HP!`, attacker);
 
     battleComboLogs.push(`🛡️ ${target.name} 觸發【破產保護令】鎖血 1 HP 絕地反擊！`);
     addLog(`🛡️ <span class="tag-event">破產保護令觸發</span> <strong>${target.icon} ${target.name}</strong> 鎖定 <strong>1 HP</strong> 不死、清除弱化並立即滿魔施放絕地大招！`);
@@ -2492,7 +2820,7 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
   if (attacker && attacker.stats) attacker.stats.dmgDealt += dmg;
   if (target.stats) target.stats.dmgTaken += dmg;
 
-  queueVisualEffect(target, 'hit', isCrit ? `💥CRIT -${dmg}` : `-${dmg}`);
+  queueVisualEffect(target, 'hit', isCrit ? `💥CRIT -${dmg}` : `-${dmg}`, attacker);
   updateDualHealthState(target);
   return dmg;
 }
@@ -2501,7 +2829,7 @@ function recordHeal(healer, target, amount) {
   const actual = Math.min(target.maxHp - target.hp, amount);
   target.hp = Math.min(target.maxHp, target.hp + amount);
   if (healer && healer.stats && actual > 0) healer.stats.healed += actual;
-  if (actual > 0) queueVisualEffect(target, 'heal', `+${actual}`);
+  if (actual > 0) queueVisualEffect(target, 'heal', `+${actual}`, healer);
   updateDualHealthState(target);
 }
 
@@ -2746,6 +3074,7 @@ function checkAndyRitual(allies, opponents) {
   const andy = allies.find(u => u.id === 'andy' && u.hp > 0 && u.inRitual);
   if (!andy) return;
   andy.ritualCount += 1;
+  BattleFX.queue(andy, andy.ritualCount >= 3 ? 'arrival' : 'ritual');
   addLog(`🕯️ <strong>${andy.name}</strong> 完成第 <strong>${andy.ritualCount} / 3</strong> 個柏克末日儀式！`);
 
   if (andy.ritualCount >= 3) {
