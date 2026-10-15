@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DC BON 全明星自動戰棋 v3.1｜動態戰鬥版</title>
+<title>DC BON 全明星自動戰棋 v3.1｜分支進化試玩版</title>
 <style>
   :root {
     --bg-dark: #1e1f22;
@@ -624,6 +624,46 @@ body[data-fx-level="light"] #artViewerImage {animation:none!important;}
 @media(prefers-reduced-motion:reduce){#artViewerImage {animation:none!important;transform:none!important;}}
 
 </style>
+<style>
+.evolution-modal {z-index:420;background:#080b20e8;}
+.evolution-panel {max-width:900px!important;border-color:#f0cf89!important;background:radial-gradient(ellipse at 50% 15%,#75553c55,transparent 60%),linear-gradient(140deg,#17263c,#2a1c40);}
+#evolutionTitle {font-size:clamp(1.1rem,3vw,1.55rem);line-height:1.5;color:#ffe5a6;}
+.evolution-reveal {height:205px;position:relative;display:flex;align-items:center;justify-content:center;margin:12px 0;overflow:hidden;isolation:isolate;}
+.evo-core {width:155px;height:155px;border:2px solid #ffe7a8;border-radius:13px;overflow:hidden;position:relative;background:linear-gradient(145deg,#263e5a,#4d3159);box-shadow:0 0 22px #ffdc7870,0 0 55px #a884fc44;z-index:2;}
+.evo-portrait {width:100%;height:100%;object-fit:cover;object-position:50% 40%;}
+.evo-symbol {position:absolute;bottom:7px;left:7px;font-size:1.7rem;text-shadow:0 2px 7px #000;}
+.evo-stars {position:absolute;bottom:0;left:0;right:0;color:#ffe5a0;letter-spacing:.2em;font-size:1.9rem;font-weight:900;z-index:4;text-shadow:0 0 15px #ffda66;}
+.evo-light {position:absolute;width:230px;height:230px;border-radius:50%;background:conic-gradient(from 0deg,transparent,#ffe4a544,transparent 13%,#c19eff33 25%,transparent 38%,#ffe4a544 50%,transparent 63%,#c19eff33 75%,transparent 88%);z-index:0;}
+.evo-ghost {position:absolute;top:34px;width:100px;height:135px;border:1px solid #d6b679;border-radius:9px;background:var(--cardback) center/cover;opacity:.7;z-index:1;}
+.evo-left {left:calc(50% - 190px);transform:rotate(-15deg);}.evo-right {right:calc(50% - 190px);transform:rotate(15deg);}
+.evo-enter .evo-left {animation:evoMergeLeft 1.15s ease-out both;}.evo-enter .evo-right {animation:evoMergeRight 1.15s ease-out both;}
+.evo-enter .evo-core {animation:evoAwaken 1.3s cubic-bezier(.2,.65,.2,1) both;}.evo-enter .evo-light {animation:evoRays 1.5s ease-out both;}.evo-enter .evo-stars {animation:evoStars 1.25s ease-out both;}
+#evolutionGroup {font-weight:700;color:#ddc7ff;line-height:1.7;margin:9px 0 14px;}
+.evolution-choices {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.evolution-option {display:flex;flex-direction:column;gap:10px;padding:17px;text-align:left;border:1px solid #a58cb5;border-radius:12px;background:#1a2941;color:#dce8f5;font:inherit;cursor:pointer;line-height:1.75;min-width:0;}
+.evolution-option strong {color:#ffe2a0;font-size:1.05rem;}.evolution-option>span:last-child {font-size:.88rem;}
+.evolution-option:hover,.evolution-option:focus-visible {border-color:#ffe2a0;background:#29324b;outline:2px solid #f4d28a;outline-offset:2px;}
+.evo-letter {align-self:start;display:grid;place-items:center;width:30px;height:30px;border:1px solid #bba1e4;border-radius:8px;color:#dcc8ff;font-weight:800;}
+.evolution-note {font-size:.77rem;line-height:1.8;color:#b7c8da;margin-top:16px;text-align:left;}
+.evolution-toast {position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:430;max-width:calc(100vw - 24px);padding:12px 22px;display:flex;flex-direction:column;gap:5px;pointer-events:none;border:1px solid #f8db99;border-radius:12px;background:#22304af2;box-shadow:0 5px 30px #0009,0 0 18px #e8c78244;color:#ffe7a8;line-height:1.6;text-align:center;}
+.evolution-toast span {font-size:.8rem;}.evolution-toast strong {font-size:1rem;}
+.evolution-summary {padding:12px;border:1px solid #b299cf88;border-radius:8px;background:#38274d99;text-align:left;line-height:1.75;margin:9px 0;}
+.evolution-summary strong {color:#ffe3a0;}.evolution-summary p {font-size:.87rem;color:#dce5f1;margin:5px 0;}.evolution-summary small {font-size:.73rem;color:#c2b6d7;}
+.evolution-badge {display:block;font-size:.72rem;color:#ffe1a0;line-height:1.5;margin:3px 0;overflow-wrap:anywhere;}
+.evolution-catalog {margin-top:12px;border-top:1px solid #9481ac66;padding-top:9px;line-height:1.7;font-size:.81rem;}
+.evolution-catalog summary {cursor:pointer;color:#e5c9ff;}.evolution-catalog>div {padding:10px 0;border-bottom:1px solid #9481ac44;}.evolution-catalog p {margin-top:6px;color:#c7d5e4;}
+.evolution-report {font-size:.83rem;line-height:1.8;color:#e2c9ff;text-align:left;margin:10px 0;}
+.hide-card-art .evo-portrait {display:none;}.hide-card-art .evo-symbol {inset:0;display:grid;place-items:center;font-size:3rem;}
+@keyframes evoMergeLeft {0% {transform:translateX(-40px) rotate(-18deg);opacity:0;}25% {opacity:.8;}85%,100% {transform:translateX(150px) scale(.5) rotate(0);opacity:0;}}
+@keyframes evoMergeRight {0% {transform:translateX(40px) rotate(18deg);opacity:0;}25% {opacity:.8;}85%,100% {transform:translateX(-150px) scale(.5) rotate(0);opacity:0;}}
+@keyframes evoAwaken {0% {transform:scale(.72);filter:brightness(.6);}50% {transform:scale(.95);filter:brightness(1);}70% {transform:scale(1.1);filter:brightness(1.6);}100% {transform:scale(1);filter:brightness(1);}}
+@keyframes evoRays {0% {opacity:0;transform:scale(.4) rotate(-35deg);}60% {opacity:1;}100% {opacity:.5;transform:scale(1.3) rotate(35deg);}}
+@keyframes evoStars {0%,45% {transform:translateY(15px) scale(.6);opacity:0;}80% {transform:translateY(0) scale(1.15);opacity:1;}100% {transform:scale(1);opacity:1;}}
+@media(max-width:600px){.evolution-panel {padding:16px 12px;}.evolution-reveal {height:160px;}.evo-core {width:115px;height:115px;}.evo-ghost {width:75px;height:100px;top:22px;}.evo-left {left:calc(50% - 130px);}.evo-right {right:calc(50% - 130px);}.evolution-choices {grid-template-columns:1fr;gap:10px;}.evolution-option {padding:12px;gap:6px;}.evolution-option strong {font-size:.96rem;}.evolution-option>span:last-child {font-size:.82rem;}.evo-stars {font-size:1.5rem;}}
+.reduce-effects .evolution-reveal *,.motion-reduced .evolution-reveal * {animation:none!important;filter:none!important;}.reduce-effects .evo-ghost,.motion-reduced .evo-ghost {display:none;}
+@media(prefers-reduced-motion:reduce){.evolution-reveal * {animation:none!important;filter:none!important;}.evo-ghost {display:none;}}
+
+</style>
 </head>
 <body>
 <div class="ambient-motion" aria-hidden="true"></div>
@@ -631,7 +671,7 @@ body[data-fx-level="light"] #artViewerImage {animation:none!important;}
 
 <header>
   <div class="title-area">
-    <h1>♟️ DC BON 全明星自動戰棋 <span style="font-size:0.75rem; color:var(--text-muted);">v3.1 動態戰鬥版</span></h1>
+    <h1>♟️ DC BON 全明星自動戰棋 <span style="font-size:0.75rem; color:var(--text-muted);">v3.1 分支進化試玩版</span></h1>
   </div>
   <div class="header-right">
     <button type="button" class="codex-btn" id="cardArtBtn" aria-pressed="true" title="顯示或隱藏角色插畫，收起後可騰出更多空間觀看戰況" onclick="GameReading.toggleArt()">🖼 卡圖：開</button>
@@ -1069,7 +1109,9 @@ const GameText = (() => {
   }
   function hero(h) {
     const key = h.id === 'stock_opp' && h.skillName.includes('SHEESH') ? 'baemon' : h.id;
-    return description(skills[key] || [['neutral','技能',h.skillDesc]], h.skillDesc, h.skillName);
+    const base = description(skills[key] || [['neutral','技能',h.skillDesc]], h.skillDesc, h.skillName);
+    const selected = window.Evolution?.summary(h);
+    return selected ? selected + '<details class="full-description"><summary>基礎機制參考（分支改動以上方為準）</summary>' + base + '</details>' : base;
   }
   const augment = a => description(augments[a.id] || [['neutral','效果',a.desc]],a.desc);
   const trait = (name,info) => description(traits[name] || [['neutral','效果',info.desc]],info.desc);
@@ -1322,7 +1364,7 @@ const BattleFX = (() => {
   }
   function queue(unit,type,text='',source=null) {
     if(!enabled()||!isBattling||!unit)return;
-    const entry={unit,source,type,text,count:Math.min(3,Math.max(0,unit.ritualCount||0))};
+    const entry={unit,source,type,text,count:Math.min(4,Math.max(0,unit.ritualCount||0))};
     if(type==='skill' && ['mouse_sis','dc_tesla','loki'].includes(unit.id)) {
       const allies=unit.isAlly?playerRoster:enemyRoster;
       entry.mana=allies.filter(u=>u.hp>0).map(u=>({unit:u,mp:u.mp}));
@@ -1353,7 +1395,7 @@ const BattleFX = (() => {
     const batch=pending;pending=[];
     if(!enabled()||!isBattling)return;
     const field=document.getElementById('battleFocus');
-    protectedRects=field?[...field.querySelectorAll('.battle-hud,.battle-events,.team-header,.unit-name,.bars,.pos-tag,.unit-stats,.unit-skill-tag,.unit-detail-btn,.move-btns')].map(node=>node.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0):[];
+    protectedRects=field?[...field.querySelectorAll('.battle-hud,.battle-events,.team-header,.unit-name,.evolution-badge,.bars,.pos-tag,.unit-stats,.unit-skill-tag,.unit-detail-btn,.move-btns')].map(node=>node.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0):[];
     let caster=null,skill=false;const dedupe=new Set();
     for(const e of batch) {
       if(e.type==='lunge'){caster=e.unit;skill=false;continue;}
@@ -1375,6 +1417,7 @@ const BattleFX = (() => {
       if(dedupe.has(id))continue;dedupe.add(id);
       if(e.type==='hit')add('hit',from,to,color,skill||source.id==='andy_opp_fused'?style:'slash',skill||e.text.includes('CRIT'));
       if(e.type==='heal')add('heal',from,to,'#88f0bf',style,false,60);
+      if(e.type==='mana')add('mana',from,to,'#8fd8ff','mint',false);
     }
     if(active.length&&!frame)frame=window.requestAnimationFrame(draw);
   }
@@ -1516,6 +1559,304 @@ const BattleFX = (() => {
 window.BattleFX = BattleFX;
 
 </script>
+<div id="evolutionToast" class="evolution-toast hidden" role="status" aria-live="polite"></div>
+<div id="evolutionModal" class="modal-overlay evolution-modal hidden" role="dialog" aria-modal="true" aria-labelledby="evolutionTitle"><div class="modal-content evolution-panel"><h2 id="evolutionTitle">二星進化</h2><div id="evolutionReveal" class="evolution-reveal" aria-hidden="true"></div><p id="evolutionGroup"></p><div id="evolutionChoices" class="evolution-choices"></div><p class="evolution-note">每個形態只選一個分支；三星以上保留。試玩數值未校準通關率。分支加攻／加速／護盾設上限；護盾及減傷維持至受益者下次行動前。</p></div></div>
+<script>
+/* Friend playtest values; each form has two independent A/B candidate pairs. */
+const EVOLUTION_PATHS = {
+  mouse_sis:[
+    ['回魔分配',['團購奶綠','其他隊友各 +35 MP；全隊回復 110 HP、攻擊 +10%。獨存時另造成 160% 傷害。'],['指定特調','最高攻擊的其他隊友 +70 MP，其餘各 +10；全隊回復 90 HP、攻擊 +10%。獨存時另造成 160% 傷害。']],
+    ['發力時機',['晨早開舖','起始 MP +30；其他隊友各 +40 MP、全隊回復 90 HP、攻擊 +8%。獨存時另造成 160% 傷害。'],['最後一杯','其他隊友各 +35 MP；全隊回復 65 HP、攻擊 +8%。首次獨存行動額外自補 200 HP；獨存第一發大招造成 240%、之後 160% 傷害。']]
+  ],
+  st_sis:[
+    ['治療對象',['全科門診','全隊回復 180 HP；保留 BUBU 健康時治療 ×1.3。'],['深切治療','生命比例最低隊友回復 300 HP，其餘各 55 HP；保留 BUBU 治療加成。']],
+    ['BUBU 保護',['健康護航','全隊回復 130 HP；施法時自身高於半血，另給全隊 70 護盾至各自下次行動前。'],['急診值班','全隊回復 110 HP；每場首次存活跌破半血，立即自補 210 HP。貓狗領導免弱化時仍會觸發。']]
+  ],
+  icy_sis:[
+    ['暴擊分配',['全班補習','健康時全隊暴擊率 +14%；大招全隊回復 130 HP、攻擊 +15%。'],['精英一對一','健康時最高攻擊友軍暴擊率 +35%，其餘 +5%；大招全隊回復 100 HP、攻擊 +15%。']],
+    ['寵物狀態',['烏冬要健康','高於半血且未弱化時全隊暴擊率 +25%，否則 +5%；大招回復 115 HP、全隊攻擊 +15%。'],['愛哭反擊','健康時全隊暴擊率 +12%；首次存活跌破半血，全隊下一次傷害額外 +40% 暴擊率；大招回復 100 HP、攻擊 +15%。']]
+  ],
+  shijie_sis:[
+    ['擊殺方式',['頂獵穿甲彈','單體 280% 傷害；沒有溢出轉火。DV 在場仍可追擊。'],['連殺轉火','單體 180% 傷害；本次直接擊殺時，向下一個目標追加 120% 傷害，每次技能限一次。']],
+    ['隊伍依賴',['雙排上分','自身 200% 傷害；DV 追擊提高至 180%，兩人攻擊各 +12%。'],['單排戰神','自身 190% 傷害；連續行動鎖定同一目標，所有傷害每層 +10%、最多三層；DV 追擊降至 60%，兩人攻擊各 +8%。']]
+  ],
+  dc_tesla:[
+    ['穩定程度',['安全駕駛','固定全體 225% 傷害，取消本技能自駕抽獎；全隊 +25 MP。其他暴擊來源仍有效。'],['Panther 極限模式','30% 自駕暴衝造成全體 420%，其餘全體 135%；全隊 +25 MP。']],
+    ['車隊定位',['賽道輸出','全體 230%，30% 暴衝提高至 360%；全隊回魔降至 +10 MP。'],['流動超級充電站','全體 125%，30% 暴衝提高至 220%；全隊回魔提高至 +40 MP。']]
+  ],
+  stock_opp:[
+    ['投資策略',['長倉牛市派','固定全隊攻擊 +20%，並造成全體 145% 傷害；放棄吸血分支。'],['空頭收割派','固定對前排造成 205% 傷害，按實際生命傷害吸血；放棄牛市全隊增攻。']],
+    ['風險處理',['複利持倉','每次施法自身攻擊 +8%，最多五次；牛市改為全隊 +15% 攻擊及全體 90%，割韭菜為 140% 吸血。'],['風險對沖','55% 牛市：全隊攻擊 +15%、全體 100%；其餘單體 145% 吸血。吸血溢出可轉自身護盾，受護盾總上限限制。']]
+  ],
+  satsuki:[
+    ['演唱會定位',['療癒系演唱會','全隊回復 195 HP、攻擊 +8%；前排敵人攻擊降低 15%。'],['熱血應援場','全隊回復 75 HP、攻擊 +23%；前排敵人攻擊降低 15%。']],
+    ['降攻策略',['鎖定敵方王牌','全隊回復 100 HP、攻擊 +8%；最高攻擊敵人攻擊降低 25%。'],['全場應援壓制','全隊回復 110 HP、攻擊 +10%；前兩名敵人各降低 12% 攻擊。']]
+  ],
+  loki:[
+    ['輸出來源',['Mobius 加班','大招 110%、其他隊友各 +30 MP；行動後 Mobius 對同一目標最多追加三次 25% 傷害。'],['時間線重斬','大招 240%、其他隊友各 +30 MP；Mobius 追擊降為一次 20%。']],
+    ['魔力接力',['時間線共享','大招 150%；其他隊友各 +35 MP。保留一次 55% Mobius。'],['臨界接力','大招 150%；最接近滿魔的其他隊友 +65 MP，其餘 +5。保留一次 55% Mobius。']]
+  ],
+  andy:[
+    ['儀式速度',['速成末日學','所需儀式減為 2；落地全體 150%，參戰後大招全體 185%。'],['完整版末日預言','所需儀式增至 4；落地全體 310%，參戰後大招全體 185%。']],
+    ['傷害時機',['一次清倉','仍需 3 儀式；落地全體 300%，之後大招降至全體 130%。'],['餘震不斷','仍需 3 儀式；落地全體 150%，之後大招提高至全體 250%。']]
+  ],
+  aming:[
+    ['Bug 對象',['廣域故障','前三名敵人各受 105% 傷害、扣除 20 MP。'],['精準停機','對魔力比例最高的可攻擊敵人造成 95% 傷害、扣除 65 MP。']],
+    ['干擾節奏',['立即刪庫','最大 MP +20；前兩名敵人各受 120% 傷害、扣除 65 MP。'],['潛伏 Bug','前兩名敵人各受 110% 傷害、扣除 15 MP；之後兩次正數回魔降低 40%，次數不可疊加。']]
+  ],
+  dashen:[
+    ['同伴需求',['獨立神諭','固定全體 155% 傷害，取消個人技能對 Loki／HUGO 的額外倍率。原羈絆保留。'],['三神共鳴','無同伴時全體 95%；有存活 Loki 或 HUGO 時全體 220%。']],
+    ['裁決分配',['眾生平等','無同伴全體 140%，有幻神同伴全體 175%。'],['罪首先判','無同伴前排 220%、其餘 65%；有幻神同伴前排 290%、其餘 95%。']]
+  ],
+  hugo:[
+    ['收割方式',['一刀終結','目標生命比例 ≤35% 時造成 300%，否則 175%；仍優先當前生命最低敵人。'],['追獵到底','先造成 155%；目標仍存活時追加 90%，每次技能限一次。']],
+    ['共鳴救援',['全隊共鳴','單體 185%；有 Loki／大神時全隊回復 145 HP。'],['孤星救援','單體 195%；毋須幻神同伴，治療生命比例最低友軍 190 HP，取消全隊治療。']]
+  ],
+  dv:[
+    ['狂暴風險',['殘血暴走','三連擊每次 65% ×（1＋已損生命比例×1.8）；低於25%生命時受到傷害 +12%。'],['可控躁狂','三連擊每次 90% ×（1＋已損生命比例×0.4），降低殘血峰值、提高健康輸出。']],
+    ['師姐關係',['輸出型雙排','三連擊每次 90% ×原低血增幅；師姐技能召喚 DV 追擊時至少為 180%。'],['分靈體保鑣','三連擊每次 60% ×原低血增幅；每場首次師姐存活降至35%生命以下，準備替她承受下一次單體傷害；範圍傷害不代擋。']]
+  ],
+  dvp:[
+    ['攻守定位',['鐵壁續航','自補 320 HP，震盪傷害降至 95%。'],['雖遠必誅','自補降至 130 HP，震盪傷害提高至 235%。']],
+    ['保護分配',['持盾守門','自補 140 HP、震盪 135%；直到自己下次行動前，受到傷害降低 30%。'],['共同富裕','自己與生命比例最低的另一位隊友各回復 140 HP；單獨存活只自補 140；震盪 135%。']]
+  ],
+  ansir:[
+    ['加速時機',['青春起跑線','起始速度 +24；技能自補 180 HP、速度 +6、單體 150%。'],['越教越精神','起始速度 −12；技能自補 180 HP、速度 +24、單體 150%。']],
+    ['青春分享',['青春獨享','技能自補 230 HP、個人速度 +20、單體 160%。'],['全隊體能課','技能自補 110 HP、全隊速度 +8、單體 135%。']]
+  ],
+  lg:[
+    ['神職定位',['審判官','單體 235%，生命最低友軍回復 100 HP。'],['牧者','單體 110%，生命最低友軍回復 280 HP。']],
+    ['特殊功能',['異端審判','單體 175%、最低血友軍回復 100 HP；命中敵人下一次實際治療減半，不可疊加次數。'],['救贖祈禱','單體 120%、最低血友軍回復 180 HP；治療對象額外清除一項回魔干擾／治療減半／印記／降攻。']]
+  ],
+  andy_opp_fused:[
+    ['終局定位',['金融海嘯','全體普攻提高至 125%；大招全體 265%、全隊回復 70 HP、攻擊 +10%。'],['穩健資產','全體普攻降至 75%；大招全體 140%、全隊回復 200 HP、各獲80短效護盾、攻擊 +15%。']],
+    ['發力曲線',['開市爆倉','本場第一發大招全體 330%，其後 155%；每次全隊回復 110 HP、攻擊 +15%。'],['長線複利','大招依次全體 150%／185%／220%／255%／290%，第五次封頂；全隊回復 120 HP、攻擊 +15%。']]
+  ],
+  baemon:[
+    ['應援重點',['療癒打 Call','全隊回復 220 HP、速度 +8。'],['狂熱舞台','全隊回復 90 HP、速度 +28。']],
+    ['舞台節奏',['開場即高潮','起始 MP +45、最大 MP +20；全隊回復 145 HP、速度 +18，後續施法較慢。'],['安可舞台','最大 MP +15；平常全隊回復 125 HP、速度 +14；本場第三次施法改為回復 230 HP、速度 +28，限一次。']]
+  ]
+};
+
+</script>
+<script>
+/* Experimental gameplay branches. Choices persist for a run; battle state resets per stage. */
+const Evolution = (() => {
+  const esc=v=>GameText.escape(String(v??''));
+  let request=null,token=0,toastTimer=null,bases=new WeakMap();
+  const form=u=>u?GameArt.keyFor(u):'';
+  const variant=u=>{
+    const c=u?.evolution;
+    return u?.isAlly!==false&&c&&c.form===form(u)&&EVOLUTION_PATHS[c.form]?.[c.group]&&['A','B'].includes(c.side)?c.group*2+(c.side==='B'?1:0):-1;
+  };
+  const state=u=>(u._evo??={actions:0,casts:0});
+  const living=xs=>xs.filter(u=>u.hp>0);
+  const targetable=xs=>xs.filter(u=>u.hp>0&&!u.inRitual);
+  const low=xs=>[...living(xs)].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
+  const high=xs=>[...living(xs)].sort((a,b)=>b.atk-a.atk)[0];
+  function info(u){if(variant(u)<0)return null;const c=u.evolution,row=EVOLUTION_PATHS[c.form][c.group],item=row[c.side==='A'?1:2];return {pair:row[0],name:item[0],desc:item[1],...c};}
+  function summary(u){const i=info(u);return i?`<div class="evolution-summary"><strong>✦ ${esc(i.name)}</strong><p>${GameText.format(i.desc)}</p><small>本局已鎖定 · ${esc(i.pair)}／${i.side} · 分支加攻上限為開戰攻擊2.5倍，加速上限為開戰速度+120，護盾上限30%生命。</small></div>`:'';}
+  function badge(u){const i=info(u);return i?`<span class="evolution-badge">✦ ${esc(i.name)}</span>`:'';}
+  function status(u){const s=u._evo;if(!s)return '';return [s.shield>0?`🛡盾 ${s.shield}`:'',s.resist>0?`🛡減傷 ${Math.round(s.resist*100)}%`:'',s.bug>0?`⌨干擾 ${s.bug}次`:'',s.antiHeal?'↓下次治療減半':''].filter(Boolean).join(' · ');}
+  function catalog(u){const rows=EVOLUTION_PATHS[form(u)];if(!rows)return '';const html=`<details class="evolution-catalog"><summary>✦ 二星分支圖鑑 · 隨機一組再選 A／B</summary>${rows.map((row,n)=>`<div><strong>第${n+1}組 · ${esc(row[0])}</strong><p>A · ${esc(row[1][0])}：${esc(row[1][1])}</p><p>B · ${esc(row[2][0])}：${esc(row[2][1])}</p></div>`).join('')}</details>`;return html+(form(u)==='stock_opp'?'<div class="evolution-catalog"><strong>👾 寶怪轉職形態</strong>'+catalog({...u,skillName:'SHEESH打Call'})+'</div>':'');}
+  function reset(){request=null;token++;clearTimeout(toastTimer);document.getElementById('evolutionModal').classList.add('hidden');document.getElementById('evolutionToast').classList.add('hidden');bases=new WeakMap();}
+  function celebrate(u,label='升星進化'){
+    const toast=document.getElementById('evolutionToast');clearTimeout(toastTimer);
+    toast.innerHTML=`<span>✦ ${esc(label)}</span><strong>${esc(u.icon)} ${esc(u.name)} ★${u.stars}</strong>`;
+    toast.classList.remove('hidden');toastTimer=setTimeout(()=>toast.classList.add('hidden'),GameReading.reduced()?900:1500);
+  }
+  function offer(u,complete,force=false,reason='二星進化'){
+    if(request)return true;
+    if(!playerRoster.includes(u)||(!force&&(u.stars||1)<2)||variant(u)>=0||!EVOLUTION_PATHS[form(u)]){complete();return false;}
+    const group=Math.floor(Math.random()*2),id=++token,rows=EVOLUTION_PATHS[form(u)],row=rows[group];
+    request={u,complete,id,group,form:form(u),pausedAt:isBattling?Date.now():null};
+    GameUI.closeUnit(false);GameArt.close();document.getElementById('codexModal').classList.add('hidden');hideTooltip();BattleFX.clear();
+    const modal=document.getElementById('evolutionModal');
+    const key=form(u),hasArt=!!GameArt.heroes[key];
+    document.getElementById('evolutionTitle').textContent=`${reason} · ${u.name}`;
+    document.getElementById('evolutionReveal').innerHTML=`<div class="evo-ghost evo-left"></div><div class="evo-ghost evo-right"></div><div class="evo-light"></div><div class="evo-core">${hasArt?`<img class="evo-portrait" src="${GameArt.src(key)}" alt="${esc(u.name)}">`:''}<span class="evo-symbol">${esc(u.icon)}</span></div><div class="evo-stars">${'★'.repeat(Math.max(1,Math.min(5,u.stars||1)))}</div>`;
+    document.getElementById('evolutionGroup').textContent=`隨機抽中第 ${group+1} 組：${row[0]}`;
+    const grid=document.getElementById('evolutionChoices');grid.innerHTML='';
+    ['A','B'].forEach((side,n)=>{const btn=document.createElement('button');btn.type='button';btn.className='evolution-option';btn.innerHTML=`<span class="evo-letter">${side}</span><strong>${esc(row[n+1][0])}</strong><span>${GameText.format(row[n+1][1])}</span>`;btn.onclick=()=>pick(side,id);grid.appendChild(btn);});
+    modal.classList.remove('hidden');modal.classList.remove('evo-enter');void modal.offsetWidth;modal.classList.add('evo-enter');grid.firstElementChild.focus();
+    return true;
+  }
+  function pick(side,id=request?.id){
+    const r=request;if(!r||id!==r.id||!['A','B'].includes(side))return false;
+    request=null;token++;
+    document.getElementById('evolutionModal').classList.add('hidden');
+    if(!playerRoster.includes(r.u))return false;
+    r.u.evolution={form:r.form,group:r.group,side};
+    if(r.pausedAt!==null&&isBattling)battleStartTime+=Math.max(0,Date.now()-r.pausedAt);
+    addLog(`✦ <strong>${esc(r.u.name)}</strong> 選擇分支 <span class="tag-event">${esc(info(r.u).name)}</span>`);
+    celebrate(r.u,'分支覺醒');r.complete();return true;
+  }
+  function ensureAll(done){const u=playerRoster.find(u=>(u.stars||1)>=2&&variant(u)<0&&EVOLUTION_PATHS[form(u)]);if(u)offer(u,()=>ensureAll(done),false,u.evolution?'轉職進化':'二星進化');else done();}
+  function upgraded(u,done){celebrate(u);ensureAll(done);}
+  function prepareBattle(){
+    bases=new WeakMap();
+    [...playerRoster,...enemyRoster].forEach(u=>{delete u._evo;bases.set(u,{atk:u.atk,spd:u.curSpd||u.spd});
+      if(variant(u)<0)return;
+      const h=u.id==='andy_opp_fused'?FUSED_HERO_TEMPLATE:HERO_POOL.find(h=>h.id===u.id);
+      u.maxMp=h?.maxMp||u.maxMp;const k=form(u),v=variant(u);
+      if(k==='mouse_sis'&&v===2)u.mp=Math.min(u.maxMp,u.mp+30);
+      if(k==='aming'&&v===2)u.maxMp+=20;
+      if(k==='ansir'&&v===0)u.curSpd+=24;
+      if(k==='ansir'&&v===1)u.curSpd=Math.max(1,u.curSpd-12);
+      if(k==='baemon'&&v===2){u.maxMp+=20;u.mp=Math.min(u.maxMp,u.mp+45);}
+      if(k==='baemon'&&v===3)u.maxMp+=15;
+      bases.set(u,{atk:u.atk,spd:u.curSpd||u.spd});state(u);
+    });
+  }
+  function buffAtk(u,pct){const cap=(bases.get(u)?.atk||u.atk)*2.5;u.atk=Math.max(u.atk,Math.min(Math.round(cap),Math.round(u.atk*(1+pct))));}
+  function buffSpd(u,amount){const cap=(bases.get(u)?.spd||u.curSpd||u.spd)+120;u.curSpd=Math.max(u.curSpd||u.spd,Math.min(cap,(u.curSpd||u.spd)+amount));}
+  function weaken(u,pct){u.atk=Math.max(20,Math.round(u.atk*(1-pct)));}
+  function shield(source,u,amount){if(u.hp<=0)return;const s=state(u),old=s.shield||0;s.shield=Math.min(Math.round(u.maxHp*.3),old+Math.round(amount));s.shieldUntil=s.actions+1;if(source.stats)source.stats.healed+=Math.max(0,s.shield-old);}
+  function mana(u,amount,source=null){if(!u)return 0;const s=u._evo;let gain=Math.max(0,amount);if(s?.bug>0&&gain>0){gain=Math.round(gain*.6);s.bug--;}
+    const old=u.mp;u.mp=Math.max(0,Math.min(u.maxMp,u.mp+gain));if(source&&u.mp>old)queueVisualEffect(u,'mana','',source);return u.mp-old;}
+  function beforeTurn(u,target){const s=u._evo;if(s){s.actions++;if(s.shieldUntil!==undefined&&s.actions>=s.shieldUntil)s.shield=0;if(s.resistUntil!==undefined&&s.actions>=s.resistUntil)s.resist=0;}
+    const v=variant(u),k=form(u);if(v<0)return;
+    const b=state(u);
+    if(k==='shijie_sis'&&v===3){const id=`${target.isAlly}:${target.id}`;b.focus=b.focusId===id?Math.min(3,(b.focus||0)+1):1;b.focusId=id;}
+    if(k==='mouse_sis'&&v===3&&!b.lastCup&&living(playerRoster).length===1){b.lastCup=true;recordHeal(u,u,200);}
+  }
+  function outgoing(a,t,dmg){const v=variant(a),k=form(a);if(v<0)return dmg;
+    if(k==='shijie_sis'&&v===3)dmg*=1+(a._evo?.focus||0)*.1;
+    return Math.round(dmg);
+  }
+  function redirect(attacker,target,meta={}){
+    if(!attacker||meta.aoe||!target.isAlly||attacker?.isAlly||target.id!=='shijie_sis')return target;
+    const dv=playerRoster.find(u=>u.id==='dv'&&u.hp>0&&variant(u)===3&&u._evo?.guardReady);
+    if(!dv)return target;dv._evo.guardReady=false;dv._evo.guardUsed=true;addLog(`🛡️ <span class="tag-event">分靈體保鑣</span> DV 替師姐承受單體傷害！`);return dv;
+  }
+  function incoming(a,t,dmg){const s=t._evo;if(s?.resist>0)dmg=Math.round(dmg*(1-s.resist));if(form(t)==='dv'&&variant(t)===0&&t.hp/t.maxHp<.25)dmg=Math.round(dmg*1.12);
+    if(s?.shield>0){const absorbed=Math.min(s.shield,dmg);s.shield-=absorbed;dmg-=absorbed;queueVisualEffect(t,'hit',`🛡-${absorbed}`);}
+    return Math.max(0,Math.round(dmg));}
+  function afterDamage(t){if(t.hp<=0)return;const v=variant(t),s=v>=0?state(t):t._evo;
+    if(form(t)==='st_sis'&&v===3&&t.hp/t.maxHp<.5&&!s.emergency){s.emergency=true;recordHeal(t,t,210);addLog(`🚑 <span class="tag-event">急診值班</span> ST 自補210 HP！`);}
+    if(form(t)==='icy_sis'&&v===3&&t.hp/t.maxHp<.5&&!s.cry){s.cry=true;living(playerRoster).forEach(u=>state(u).critCharge=1);addLog(`🐱 <span class="tag-event">愛哭反擊</span> 全隊下一次傷害暴擊率提高！`);}
+    if(t.isAlly&&t.id==='shijie_sis'&&t.hp/t.maxHp<=.35){const dv=playerRoster.find(u=>u.id==='dv'&&u.hp>0&&variant(u)===3);if(dv){const d=state(dv);if(!d.guardUsed&&!d.guardArmed){d.guardArmed=true;d.guardReady=true;}}}
+  }
+  function healAmount(source,t,amount){if(amount>0&&t.hp<t.maxHp&&t._evo?.antiHeal){t._evo.antiHeal=0;return Math.round(amount*.5);}return amount;}
+  function healed(source,t,amount,actual){if(form(source||{})==='stock_opp'&&variant(source)===3&&source===t&&source._evo?.draining&&amount>actual)shield(source,t,amount-actual);}
+  function cleanse(t){const s=t._evo;if(s?.bug>0){s.bug=0;return;}if(s?.antiHeal){s.antiHeal=0;return;}if(t.sisMarks>0){t.sisMarks=0;return;}const base=bases.get(t)?.atk;if(base&&t.atk<base)t.atk=base;}
+  function icyCrit(attacker,roster){let chance=0;
+    roster.filter(u=>u.id==='icy_sis'&&u.hp>0).forEach(u=>{const v=variant(u),healthy=!u.isWeakened;
+      let n=healthy?.2:0;
+      if(v===0)n=healthy?.14:0;
+      if(v===1)n=healthy?(high(roster)===attacker?.35:.05):0;
+      if(v===2)n=healthy&&u.hp/u.maxHp>.5?.25:.05;
+      if(v===3)n=healthy?.12:0;
+      chance=Math.max(chance,n);
+    });
+    if(attacker._evo?.critCharge){attacker._evo.critCharge=0;chance+=.4;}return Math.min(1,chance);
+  }
+  function mobius(u){const v=variant(u);return v===0?[3,.25]:v===1?[1,.2]:[1,.55];}
+  function ritualNeed(u){return variant(u)===0?2:variant(u)===1?4:3;}
+  function ritualDamage(u){return [1.5,3.1,3,1.5][variant(u)]||2.2;}
+  function normal(u){return form(u)==='andy_opp_fused'?(variant(u)===0?1.25:variant(u)===1?.75:1):1;}
+  function cast(a,allies,opponents,target){
+    const v=variant(a);if(v<0)return false;
+    const k=form(a),s=state(a);s.casts++;
+    const friends=living(allies),foes=targetable(opponents),others=friends.filter(u=>u!==a);
+    const boost=a.isAlly&&playerAugments.some(x=>x.id==='aug_oil')?1.2:1;
+    const hurt=(t,m,area=false)=>{if(!t||t.hp<=0)return 0;const old=t.hp,meta={aoe:area,secondary:false};dealDamage(a,t,Math.round(a.atk*m*boost*1e6)/1e6,false,meta);return meta.actualLifeDamage??Math.max(0,old-t.hp);};
+    const heal=(t,n)=>{if(t?.hp>0)recordHeal(a,t,Math.round(n*boost));};
+    const allHeal=n=>friends.forEach(u=>heal(u,n)),allAtk=p=>friends.forEach(u=>buffAtk(u,p));
+    const allHurt=m=>foes.forEach(u=>hurt(u,m,true));
+    addLog(`✦ <strong>${esc(a.name)}</strong> 施放分支 <span class="tag-event">${esc(info(a).name)}</span>`);
+    switch(k){
+      case 'mouse_sis':{
+        if(v===1){const carry=high(others);others.forEach(u=>mana(u,u===carry?70:10,a));}else others.forEach(u=>mana(u,v===0||v===3?35:40,a));
+        allHeal(v===0?110:v===3?65:90);allAtk(v>=2?.08:.1);
+        if(!others.length){let m=1.6;if(v===3&&!s.soloCast){s.soloCast=true;m=2.4;}hurt(target,m);}break;
+      }
+      case 'st_sis':{
+        const mult=!a.isWeakened?1.3:1;
+        if(v===1){const t=low(friends);friends.forEach(u=>heal(u,(u===t?300:55)*mult));}
+        else allHeal((v===0?180:v===2?130:110)*mult);
+        if(v===2&&a.hp/a.maxHp>.5)friends.forEach(u=>shield(a,u,70*boost));break;
+      }
+      case 'icy_sis':allHeal([130,100,115,100][v]);allAtk(.15);break;
+      case 'shijie_sis':{
+        const killed=target.hp>0;hurt(target,[2.8,1.8,2,1.9][v]);
+        if(v===1&&killed&&target.hp<=0){const next=targetable(opponents)[0];if(next)hurt(next,1.2);}
+        const dv=friends.find(u=>u.id==='dv');
+        if(dv&&target.hp>0){let mult=v===2?1.8:v===3?.6:1.2;if(variant(dv)===2)mult=Math.max(mult,1.8);dealDamage(dv,target,dv.atk*mult,false,{secondary:true});const pct=v===3?.08:v===2?.12:.2;buffAtk(a,pct);buffAtk(dv,pct);}break;
+      }
+      case 'dc_tesla':{
+        const critical=v===0?false:Math.random()<.3;
+        allHurt(v===0?2.25:v===1?(critical?4.2:1.35):v===2?(critical?3.6:2.3):(critical?2.2:1.25));friends.forEach(u=>mana(u,v===2?10:v===3?40:25,a));break;
+      }
+      case 'stock_opp':{
+        if(v===2&&s.casts<=5)buffAtk(a,.08);
+        const bull=v===0?true:v===1?false:Math.random()<.55;
+        if(bull){allAtk(v===0?.2:.15);allHurt(v===0?1.45:v===2?.9:1);}
+        else{const dealt=hurt(target,v===1?2.05:v===2?1.4:1.45);s.draining=true;heal(a,dealt/boost);s.draining=false;}break;
+      }
+      case 'satsuki':{
+        allHeal([195,75,100,110][v]);allAtk([.08,.23,.08,.1][v]);
+        if(v===2){const t=high(foes);if(t)weaken(t,.25);}else if(v===3)foes.slice(0,2).forEach(u=>weaken(u,.12));else weaken(target,.15);break;
+      }
+      case 'loki':{
+        hurt(target,[1.1,2.4,1.5,1.5][v]);
+        if(v===3){const sorted=[...others].sort((x,y)=>(y.mp/y.maxMp)-(x.mp/x.maxMp));others.forEach(u=>mana(u,u===sorted[0]?65:5,a));}
+        else others.forEach(u=>mana(u,v===2?35:30,a));break;
+      }
+      case 'andy':allHurt(v===2?1.3:v===3?2.5:1.85);break;
+      case 'aming':{
+        const targets=v===1?[...foes].sort((x,y)=>y.mp/y.maxMp-x.mp/x.maxMp).slice(0,1):foes.slice(0,v===0?3:2);
+        targets.forEach(u=>{hurt(u,[1.05,.95,1.2,1.1][v]);u.mp=Math.max(0,u.mp-[20,65,65,15][v]);if(v===3)state(u).bug=2;});break;
+      }
+      case 'dashen':{
+        const partner=friends.some(u=>u.id==='loki'||u.id==='hugo');
+        if(v===3)foes.forEach(u=>hurt(u,u===target?(partner?2.9:2.2):(partner?.95:.65),true));
+        else allHurt(v===0?1.55:v===1?(partner?2.2:.95):(partner?1.75:1.4));break;
+      }
+      case 'hugo':{
+        const t=[...foes].sort((x,y)=>x.hp-y.hp)[0]||target;
+        hurt(t,v===0?(t.hp/t.maxHp<=.35?3:1.75):v===1?1.55:v===2?1.85:1.95);
+        if(v===1&&t.hp>0)hurt(t,.9);
+        if(v===3)heal(low(friends),190);else if(friends.some(u=>u.id==='loki'||u.id==='dashen'))allHeal(v===2?145:90);break;
+      }
+      case 'dv':{
+        const missing=1-a.hp/a.maxHp,m=v===0?.65*(1+missing*1.8):v===1?.9*(1+missing*.4):(v===2?.9:.6)*(1+missing);
+        for(let i=0;i<3;i++){const list=targetable(opponents);if(list.length)hurt(list[Math.floor(Math.random()*list.length)],m);}break;
+      }
+      case 'dvp':{
+        if(v===3){heal(a,140);const t=low(others);if(t)heal(t,140);}else heal(a,[320,130,140][v]);
+        hurt(target,[.95,2.35,1.35,1.35][v]);if(v===2){s.resist=.3;s.resistUntil=s.actions+1;}break;
+      }
+      case 'ansir':heal(a,[180,180,230,110][v]);if(v===3)friends.forEach(u=>buffSpd(u,8));else buffSpd(a,[6,24,20][v]);hurt(target,v===2?1.6:v===3?1.35:1.5);break;
+      case 'lg':{
+        hurt(target,[2.35,1.1,1.75,1.2][v]);const t=[...friends].sort((x,y)=>x.hp-y.hp)[0];heal(t,[100,280,100,180][v]);if(v===2&&target.hp>0)state(target).antiHeal=1;if(v===3&&t)cleanse(t);break;
+      }
+      case 'andy_opp_fused':{
+        allHurt(v===0?2.65:v===1?1.4:v===2?(s.casts===1?3.3:1.55):Math.min(2.9,1.5+(s.casts-1)*.35));
+        allHeal([70,200,110,120][v]);allAtk(v===0?.1:.15);if(v===1)friends.forEach(u=>shield(a,u,80*boost));break;
+      }
+      case 'baemon':{
+        const encore=v===3&&s.casts===3;
+        allHeal(v===0?220:v===1?90:v===2?145:encore?230:125);friends.forEach(u=>buffSpd(u,v===0?8:v===1?28:v===2?18:encore?28:14));break;
+      }
+      default:return false;
+    }
+    return true;
+  }
+  document.addEventListener('keydown',e=>{
+    if(!request)return;
+    const art=document.getElementById('artViewer');if(!art.classList.contains('hidden'))return;
+    if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();document.getElementById('evolutionGroup').textContent='請先選擇 A 或 B，本局分支將固定。';}
+    if(e.key==='Tab'){
+      const buttons=[...document.getElementById('evolutionChoices').querySelectorAll('button')],first=buttons[0],last=buttons[buttons.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+  return {form,variant,info,summary,badge,status,catalog,reset,celebrate,offer,pick,ensureAll,upgraded,prepareBattle,buffAtk,buffSpd,shield,mana,beforeTurn,outgoing,redirect,incoming,afterDamage,healAmount,healed,icyCrit,mobius,ritualNeed,ritualDamage,normal,cast,pending:()=>!!request};
+})();
+window.Evolution=Evolution;
+
+</script>
 <script>
 /* Presentation only: no combat state writes, RNG, timers or balance changes. */
 const GameUI = (() => {
@@ -1544,7 +1885,7 @@ const GameUI = (() => {
       ['synergyPanel','augmentPanel'].forEach(id => { el(id).open = next !== 'battle'; });
     }
     document.body.classList.toggle('run-started', playerRoster.length > 0);
-    el('phaseLabel').textContent = ({draft:'招募／強化',ready:'備戰 · 可調整站位',battle:'戰鬥進行中',report:'賽後戰報',finished:'本局結束'})[next] || '準備開始';
+    el('phaseLabel').textContent = ({evolution:'升星進化 · 選擇分支',draft:'招募／強化',ready:'備戰 · 可調整站位',battle:'戰鬥進行中',report:'賽後戰報',finished:'本局結束'})[next] || '準備開始';
   }
   function clear() {
     BattleFX.clear();
@@ -1571,7 +1912,7 @@ const GameUI = (() => {
       el('eventLine').textContent = entry.textContent.replace(/\s+/g,' ').trim();
   }
   function sync() {
-    const next = battleEndPending ? 'report' : runFinished ? 'finished' : isBattling ? 'battle' : 'ready';
+    const next = Evolution.pending() ? 'evolution' : battleEndPending ? 'report' : runFinished ? 'finished' : isBattling ? 'battle' : 'ready';
     setPhase(next);
     el('startBattleBtn').textContent = isBattling ? '⚔ 戰鬥進行中' : runFinished ? '本局已結束' : '⚔ 開始本關戰鬥';
     const a = playerRoster.filter(u=>u.hp>0).length, e = enemyRoster.filter(u=>u.hp>0).length;
@@ -1614,7 +1955,7 @@ const GameUI = (() => {
   }
   function draftPreview(hero, replaceIndex = -1) {
     const existing=playerRoster.find(u=>u.id===hero.id);
-    if(existing && replaceIndex<0) return `<div class="selection-preview"><strong>⭐ 升星 ★${existing.stars} → ★${existing.stars+1}</strong><span>基礎生命 ${existing.baseHp} → ${Math.round(existing.baseHp*1.35)}</span><span>基礎攻擊 ${existing.baseAtk} → ${Math.round(existing.baseAtk*1.35)}</span><small>未計羈絆與增幅；羈絆人數維持不變。</small></div>`;
+    if(existing && replaceIndex<0) return `<div class="selection-preview"><strong>⭐ 升星 ★${existing.stars} → ★${existing.stars+1}</strong><span>基礎生命 ${existing.baseHp} → ${Math.round(existing.baseHp*1.35)}</span><span>基礎攻擊 ${existing.baseAtk} → ${Math.round(existing.baseAtk*1.35)}</span><small>${existing.stars===1?'升二星後隨機抽一組分支，再選 A／B。':'保留已選分支，不再重抽。'}</small><small>未計羈絆與增幅；羈絆人數維持不變。</small></div>`;
     if(playerRoster.length>=4 && replaceIndex<0) return '<div class="selection-preview"><strong>隊伍已滿 · 下一步選擇替換</strong><span>替換頁會列出各位置嘅羈絆得失。</span></div>';
     const next=playerRoster.map(u=>projected(u));
     if(replaceIndex>=0) next[replaceIndex]=projected(hero); else next.push(projected(hero));
@@ -1634,7 +1975,7 @@ const GameUI = (() => {
     const u=(side==='ally'?playerRoster:enemyRoster)[index];if(!u)return;
     returnFocus=document.activeElement;
     el('unitDetailTitle').textContent=`${side==='ally'?'我方':'敵方'} · ${u.name} ★${u.stars}`;
-    el('unitDetailBody').innerHTML=`<p class="detail-note">查看當刻狀態；戰鬥會繼續進行。</p><div class="detail-values"><span>♥ HP ${Math.max(0,u.hp)}／${u.maxHp}</span><span>◆ MP ${u.mp}／${u.maxMp}</span><span>⚔ 攻 ${u.atk}</span><span>⚡ 速 ${u.curSpd||u.spd}</span></div><p>${u.inRitual?`🔮 儀式 ${u.ritualCount}/3 · `:''}${u.isWeakened?'↓ 弱化中 · ':''}${u.sisMarks?`💅 印記 ${u.sisMarks} · `:''}${index===0?'🛡 1 號前排':'後排 '+(index+1)+' 號位'}</p><div class="detail-traits">${u.traits.map(t=>`<div><strong>${esc(t)}</strong>${GameText.tooltip(t,TRAIT_INFO[t]?.desc||'詳見遊戲規則')}</div>`).join('')}</div>${GameText.hero(u)}${u.easterEggHint?renderEasterHint(u.easterEggHint):''}`;
+    el('unitDetailBody').innerHTML=`<p class="detail-note">查看當刻狀態；戰鬥會繼續進行。</p><div class="detail-values"><span>♥ HP ${Math.max(0,u.hp)}／${u.maxHp}</span><span>◆ MP ${u.mp}／${u.maxMp}</span><span>⚔ 攻 ${u.atk}</span><span>⚡ 速 ${u.curSpd||u.spd}</span><span>${Evolution.status(u)}</span></div><p>${u.inRitual?`🔮 儀式 ${u.ritualCount}/3 · `:''}${u.isWeakened?'↓ 弱化中 · ':''}${u.sisMarks?`💅 印記 ${u.sisMarks} · `:''}${index===0?'🛡 1 號前排':'後排 '+(index+1)+' 號位'}</p><div class="detail-traits">${u.traits.map(t=>`<div><strong>${esc(t)}</strong>${GameText.tooltip(t,TRAIT_INFO[t]?.desc||'詳見遊戲規則')}</div>`).join('')}</div>${GameText.hero(u)}${u.easterEggHint?renderEasterHint(u.easterEggHint):''}`;
     el('unitDetailModal').classList.remove('hidden'); el('unitDetailClose').focus();
   }
   function closeUnit(restore=true) {
@@ -1733,6 +2074,7 @@ function showTraitTooltip(e, traitName) {
 
 // ================= 2. 初始化與流程控制 =================
 function initGame(preserveMode = false) {
+  Evolution.reset();
   SceneFX.cancelDefeat();
   GameUI.clear();
   soulsMode = preserveMode === true && soulsMode;
@@ -1755,7 +2097,7 @@ function initGame(preserveMode = false) {
   document.getElementById('battleLog').innerHTML = '<div class="log-entry">🎮 歡迎來到 <strong>DC BON 全明星自動戰棋 v3.1</strong>！戰鬥視窗已支援重點顏色標記：<span class="tag-buff">↑ 增益</span> <span class="tag-nerf">↓ 弱化</span> <span class="tag-dmg">⚔️ 傷害</span> <span class="tag-heal">💚 回血</span></div>';
   generateEnemyTeam(currentStage);
   updateUI();
-  showHeroDraft('選擇你的初始英雄 (第 1 關)', '挑選 1 位 Discord 朋友作為開局隊長 (Andy安迪將於第 2 關後解鎖)');
+  showHeroDraft('選擇你的初始英雄 (第 1 關)', '挑選 1 位朋友作為隊長；重複招募升二星可解鎖隨機分支二選一（Andy 第 2 關起解鎖）');
 }
 
 function resetGame() {
@@ -1875,7 +2217,7 @@ function showHeroDraft(title, subtitle) {
 }
 
 function selectHero(heroTemplate) {
-  if (runFinished || currentStage > maxStage) return;
+  if (runFinished || currentStage > maxStage || Evolution.pending()) return;
   modeLocked = true;
   updateModeControl();
   const existing = playerRoster.find(h => h.id === heroTemplate.id);
@@ -1884,7 +2226,7 @@ function selectHero(heroTemplate) {
     existing.baseHp = Math.round(existing.baseHp * 1.35);
     existing.baseAtk = Math.round(existing.baseAtk * 1.35);
     addLog(`⭐ <strong>${existing.icon} ${existing.name}</strong> <span class="tag-buff">🟢 升星 ★${existing.stars}</span> 基礎生命與攻擊力 +35%！`);
-    proceedAfterHeroSelection();
+    Evolution.upgraded(existing, proceedAfterHeroSelection);
   } else if (playerRoster.length < 4) {
     playerRoster.push({
       ...heroTemplate,
@@ -1941,6 +2283,9 @@ function showReplaceModal(newHero) {
 }
 
 function proceedAfterHeroSelection() {
+  Evolution.ensureAll(continueAfterHeroSelection);
+}
+function continueAfterHeroSelection() {
   if (currentStage === 1 && playerAugments.length === 0 && bonusAugmentPending === 0 && document.getElementById('stageDisplay').innerText.includes('第 1')) {
     document.getElementById('modalOverlay').classList.add('hidden');
     generateEnemyTeam(currentStage);
@@ -1982,9 +2327,11 @@ function showAugmentDraft(isBonus = false) {
     `;
     card.onclick = (event) => {
       if (isReadingClick(event)) return;
+      if (Evolution.pending() || overlay.classList.contains('hidden') || playerAugments.some(a => a.id === aug.id)) return;
       playerAugments.push(aug);
       syncBaemonTransformation();
       addLog(`⚡ 獲得海克斯增幅：<span class="tag-event">${aug.name}</span>！`);
+      Evolution.ensureAll(() => {
       if (bonusAugmentPending > 0) {
         bonusAugmentPending--;
         showAugmentDraft(true);
@@ -1994,6 +2341,7 @@ function showAugmentDraft(isBonus = false) {
         prepareUnitsForStage();
         updateUI();
       }
+      });
     };
     grid.appendChild(card);
   });
@@ -2081,6 +2429,8 @@ function prepareUnitsForStage() {
   const hasAug = (id) => playerAugments.some(a => a.id === id);
 
   playerRoster.forEach((u, idx) => {
+    const original = u.id === 'andy_opp_fused' ? FUSED_HERO_TEMPLATE : HERO_POOL.find(h => h.id === u.id);
+    if (original) u.maxMp = original.maxMp;
     let maxHp = u.baseHp;
     let atk = u.baseAtk;
     let spd = u.spd;
@@ -2133,6 +2483,7 @@ function prepareUnitsForStage() {
     u.isWeakened = false;
     u.stats = { dmgDealt: 0, dmgTaken: 0, healed: 0 };
   });
+  Evolution.prepareBattle();
 }
 
 function updateDualHealthState(unit) {
@@ -2157,7 +2508,7 @@ function updateDualHealthState(unit) {
 
 // ================= 5. 介面渲染與視覺特效佇列 (修復動畫覆蓋問題) =================
 function moveUnit(index, dir) {
-  if (isBattling || battleEndPending || runFinished) return;
+  if (isBattling || battleEndPending || runFinished || Evolution.pending()) return;
   const targetIdx = index + dir;
   if (targetIdx < 0 || targetIdx >= playerRoster.length) return;
   const temp = playerRoster[index];
@@ -2294,8 +2645,8 @@ function renderTeamGrid(containerId, roster, isAlly) {
     let statusTooltip = idx === 0 ? '位於 1 號位，優先承受單體攻擊，也是觸發【宿敵彩蛋】的叫陣位！' : '位於後排受到前排保護。';
 
     if (u.inRitual) {
-      statusTag = `🔮 儀式 (${u.ritualCount}/3)`;
-      statusTooltip = '正在場外進行末日儀式，友軍每放 1 次大招 +1 儀式，滿 3 次攜帶隕石降臨！';
+      statusTag = `🔮 儀式 (${u.ritualCount}/${Evolution.ritualNeed(u)})`;
+      statusTooltip = `正在場外進行末日儀式，友軍每放 1 次大招 +1 儀式，滿 ${Evolution.ritualNeed(u)} 次攜帶隕石降臨！`;
     } else if (u.dualHpPet) {
       if (u.petSingleBar) {
         statusTag = `🐾 ${u.dualHpPet}合一 (免弱化)`;
@@ -2313,7 +2664,9 @@ function renderTeamGrid(containerId, roster, isAlly) {
     if (u.hp > 0 && hpPct < 30) statusTag += ' | ⚠ 低生命';
     if (u.sisMarks > 0) statusTag += ` | 💅印記x${u.sisMarks}`;
 
-    const safeSkillDesc = u.skillDesc.replace(/'/g, "\\'");
+    const selectedBranch = Evolution.info(u);
+    const safeSkillDesc = (selectedBranch ? selectedBranch.name + '：' + selectedBranch.desc : u.skillDesc).replace(/'/g, "\\'");
+    if (Evolution.status(u)) statusTag += ' | ' + Evolution.status(u);
     const safeLore = (u.lore || '').replace(/'/g, "\\'");
     const hpTooltip = hasDualBar
       ? `【雙血量機制】<br>• 右半青色 (50%~100%)：${u.petBuffDesc}<br>• 左半綠色 (0%~50%)：${u.petWeakDesc}`
@@ -2330,6 +2683,7 @@ function renderTeamGrid(containerId, roster, isAlly) {
           </div>
           <span class="pos-tag" onmouseenter="showTooltip(event, '📌 狀態與位置說明', '${statusTooltip}')" onmouseleave="scheduleTooltipHide()">${statusTag}</span>
         </div>
+        ${Evolution.badge(u)}
         <div class="bars">
           <div class="bar-wrap" onmouseenter="showTooltip(event, '❤️ 生命值 (HP)', '${hpTooltip}')" onmouseleave="scheduleTooltipHide()">
             ${hasDualBar ? `
@@ -2449,6 +2803,7 @@ function showNemesisChoiceModal() {
 }
 
 function executeNemesisPeace() {
+  if (Evolution.pending() || runFinished) return;
   battleComboLogs.push('🤝 觸發【宿敵大和解】：合體誕生神卡「☯️ 安迪與奧本海默」');
   addLog(`<span class="tag-event">☯️ 世紀大和解</span> 股票奧本海默與 Andy安迪 合體進化為<strong>【☯️ 安迪與奧本海默】</strong>！`);
 
@@ -2484,7 +2839,7 @@ function executeNemesisPeace() {
   BattleFX.queue(fusedUnit, 'fusion');
 
   document.getElementById('nemesisModal').classList.add('hidden');
-  isPausedForEvent = false;
+  Evolution.offer(fusedUnit, () => { isPausedForEvent = false; BattleFX.queue(fusedUnit, 'fusion'); updateUI(); }, true, '合體覺醒');
   updateUI();
 }
 
@@ -2611,7 +2966,7 @@ function finishDiceDuel() {
     myWinner.hp = myWinner.maxHp;
     myWinner.baseAtk = myWinner.baseAtk * 2;
     myWinner.atk = myWinner.atk * 2;
-    myWinner.mp = Math.min(myWinner.maxMp, myWinner.mp + 50);
+    Evolution.mana(myWinner, 50);
     bonusAugmentPending += 1;
     battleComboLogs.push(`🎲 【宿敵死鬥大勝】：我方 ${myWinner.name} 勝出，永久雙倍攻擊力並獲額外海克斯！`);
     addLog(`🏆 <span class="tag-buff">🟢 死鬥大勝</span> 我方 <strong>${myWinner.icon} ${myWinner.name}</strong> 贏得決鬥！滿血恢復、<span class="tag-buff">🟢 攻擊力永久翻倍 (${myWinner.atk})</span> 並鎖定額外海克斯獎勵！`);
@@ -2651,7 +3006,7 @@ function addLog(html, cls = '') {
 }
 
 function startBattle() {
-  if (isBattling || battleEndPending || runFinished || playerRoster.length === 0) return;
+  if (isBattling || battleEndPending || runFinished || playerRoster.length === 0 || Evolution.pending()) return;
   isBattling = true;
   isPausedForEvent = false;
   nemesisTriggeredThisBattle = false;
@@ -2690,7 +3045,7 @@ function startBattle() {
   let turnIndex = 0;
 
   battleInterval = setInterval(() => {
-    if (isPausedForEvent) return;
+    if (isPausedForEvent || Evolution.pending()) return;
 
     const aliveAllies = playerRoster.filter(u => u.hp > 0);
     const aliveEnemies = enemyRoster.filter(u => u.hp > 0);
@@ -2730,7 +3085,7 @@ function startBattle() {
         addLog(`🕯️ <strong>${actor.name}</strong> 因隊友全滅被迫提早現身參戰！`);
         if (checkNemesisEasterEgg(actor)) return;
       } else {
-        addLog(`🔮 <strong>${actor.name}</strong> 正在場外進行柏克末日儀式 (${actor.ritualCount}/3)...`);
+        addLog(`🔮 <strong>${actor.name}</strong> 正在場外進行柏克末日儀式 (${actor.ritualCount}/${Evolution.ritualNeed(actor)})...`);
         return;
       }
     }
@@ -2752,8 +3107,10 @@ function getTarget(opponents) {
   return null;
 }
 
-function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
-  let dmg = Math.round(rawDmg);
+function dealDamage(attacker, target, rawDmg, isTrueDamage = false, meta = {}) {
+  target = Evolution.redirect(attacker, target, meta);
+  const beforeHP = target.hp;
+  let dmg = Evolution.outgoing(attacker, target, Math.round(rawDmg));
   let isCrit = false;
 
   if (!isTrueDamage) {
@@ -2772,8 +3129,7 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
       }
 
       const shortAug = playerAugments.some(a => a.id === 'aug_short');
-      const icyBuff = playerRoster.some(u => u.id === 'icy_sis' && u.hp > 0 && !u.isWeakened);
-      const critChance = (shortAug ? 0.35 : 0) + (icyBuff ? 0.20 : 0);
+      const critChance = (shortAug ? 0.35 : 0) + Evolution.icyCrit(attacker, playerRoster);
       if (critChance > 0 && Math.random() < critChance) {
         dmg = Math.round(dmg * 1.6);
         isCrit = true;
@@ -2789,6 +3145,8 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
     }
   }
 
+  dmg = Evolution.incoming(attacker, target, dmg);
+
   // 檢查新海克斯：【破產保護令】（我方首位受到致命傷害者鎖血 1 點、清負面、滿魔立即開大並維持存活）
   if (target.isAlly && bankruptAvailable && target.hp - dmg <= 0) {
     bankruptAvailable = false;
@@ -2800,6 +3158,8 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
     if (attacker && attacker.stats) attacker.stats.dmgDealt += dmg;
     if (target.stats) target.stats.dmgTaken += dmg;
     queueVisualEffect(target, 'hit', `🛡️鎖血 1 HP!`, attacker);
+    meta.actualLifeDamage = dmg;
+    Evolution.afterDamage(target);
 
     battleComboLogs.push(`🛡️ ${target.name} 觸發【破產保護令】鎖血 1 HP 絕地反擊！`);
     addLog(`🛡️ <span class="tag-event">破產保護令觸發</span> <strong>${target.icon} ${target.name}</strong> 鎖定 <strong>1 HP</strong> 不死、清除弱化並立即滿魔施放絕地大招！`);
@@ -2815,22 +3175,26 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false) {
   }
 
   target.hp = Math.max(0, target.hp - dmg);
-  target.mp = Math.min(target.maxMp, target.mp + 15);
+  Evolution.mana(target, 15);
 
   if (attacker && attacker.stats) attacker.stats.dmgDealt += dmg;
   if (target.stats) target.stats.dmgTaken += dmg;
 
   queueVisualEffect(target, 'hit', isCrit ? `💥CRIT -${dmg}` : `-${dmg}`, attacker);
   updateDualHealthState(target);
+  meta.actualLifeDamage = Math.min(beforeHP, dmg);
+  Evolution.afterDamage(target);
   return dmg;
 }
 
 function recordHeal(healer, target, amount) {
+  amount = Evolution.healAmount(healer, target, amount);
   const actual = Math.min(target.maxHp - target.hp, amount);
   target.hp = Math.min(target.maxHp, target.hp + amount);
   if (healer && healer.stats && actual > 0) healer.stats.healed += actual;
   if (actual > 0) queueVisualEffect(target, 'heal', `+${actual}`, healer);
   updateDualHealthState(target);
+  Evolution.healed(healer, target, amount, actual);
 }
 
 function executeUnitTurn(actor) {
@@ -2840,6 +3204,7 @@ function executeUnitTurn(actor) {
   const target = getTarget(opponents);
   if (!target || isPausedForEvent) return;
 
+  Evolution.beforeTurn(actor, target);
   GameUI.begin(actor, target);
   queueVisualEffect(actor, 'lunge');
   const extraMp = (actor.isAlly && playerAugments.some(a => a.id === 'aug_battery')) ? 15 : 0;
@@ -2880,12 +3245,12 @@ function executeUnitTurn(actor) {
   } else {
     if (actor.id === 'andy_opp_fused') {
       const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
-      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk));
-      actor.mp = Math.min(actor.maxMp, actor.mp + 30 + extraMp);
+      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * Evolution.normal(actor), false, {aoe:true}));
+      Evolution.mana(actor, 30 + extraMp);
       addLog(`☯️ <strong>${actor.name}</strong> 普攻橫掃敵方全體 <span class="tag-dmg">⚔️ 全體金融風暴</span>！`);
     } else {
       const dmg = dealDamage(actor, target, actor.atk);
-      actor.mp = Math.min(actor.maxMp, actor.mp + 30 + extraMp);
+      Evolution.mana(actor, 30 + extraMp);
       addLog(`${actor.isAlly ? '🟢' : '🔴'} <strong>${actor.name}</strong> 普攻 <strong>${target.name}</strong> <span class="tag-dmg">⚔️ -${dmg}</span>`);
     }
   }
@@ -2893,7 +3258,9 @@ function executeUnitTurn(actor) {
   if (actor.id === 'loki' && actor.hp > 0 && !isPausedForEvent) {
     const mobiusTarget = getTarget(opponents);
     if (mobiusTarget) {
-      const mDmg = dealDamage(actor, mobiusTarget, actor.atk * 0.55);
+      const [count, factor] = Evolution.mobius(actor);
+      let mDmg = 0;
+      for (let i = 0; i < count && mobiusTarget.hp > 0; i++) mDmg += dealDamage(actor, mobiusTarget, actor.atk * factor, false, {secondary:true});
       battleComboLogs.push(`🕵️‍♂️ Loki 背後靈【Mobius】協同電擊`);
       addLog(`🕵️‍♂️ <strong>背後靈【Mobius】</strong> 電擊 <strong>${mobiusTarget.name}</strong> <span class="tag-dmg">⚔️ -${mDmg}</span>`);
     }
@@ -2902,13 +3269,14 @@ function executeUnitTurn(actor) {
 
 function castSkill(actor, allies, opponents, mainTarget) {
   queueVisualEffect(actor, 'skill', `✦ ${actor.skillName}`);
+  if (Evolution.cast(actor, allies, opponents, mainTarget)) return;
   const skillBoost = (actor.isAlly && playerAugments.some(a => a.id === 'aug_oil')) ? 1.2 : 1;
   const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
   const aliveAllies = allies.filter(u => u.hp > 0);
 
   switch (actor.id) {
     case 'andy_opp_fused': {
-      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 2.0 * skillBoost));
+      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 2.0 * skillBoost, false, {aoe:true}));
       aliveAllies.forEach(a => {
         recordHeal(actor, a, Math.round(150 * skillBoost));
         a.atk = Math.round(a.atk * 1.25);
@@ -2918,7 +3286,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
     }
     case 'mouse_sis': {
       const otherAllies = aliveAllies.filter(a => a !== actor);
-      otherAllies.forEach(a => a.mp = Math.min(a.maxMp, a.mp + 40));
+      otherAllies.forEach(a => Evolution.mana(a, 40, actor));
       aliveAllies.forEach(a => {
         recordHeal(actor, a, Math.round(90 * skillBoost));
         a.atk = Math.round(a.atk * 1.15);
@@ -2967,9 +3335,9 @@ function castSkill(actor, allies, opponents, mainTarget) {
       const mult = isCrit ? 3.2 : 1.8;
       let totalDmg = 0;
       aliveOpps.forEach(e => {
-        totalDmg += dealDamage(actor, e, actor.atk * mult * skillBoost);
+        totalDmg += dealDamage(actor, e, actor.atk * mult * skillBoost, false, {aoe:true});
       });
-      aliveAllies.forEach(a => a.mp = Math.min(a.maxMp, a.mp + 25));
+      aliveAllies.forEach(a => Evolution.mana(a, 25, actor));
       addLog(`🚗 <strong>${actor.name}</strong> 大喊「Panther Mode 彈射！」紅色 Model 3 飄移切入撞飛敵方全體！${isCrit ? '<span class="tag-crit">⚡FSD暴衝雙倍!</span>' : ''} <span class="tag-dmg">⚔️ 全體共-${totalDmg}</span> <span class="tag-buff">🟢 全隊+25 MP</span>`);
       break;
     }
@@ -2984,7 +3352,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
       } else {
         if (Math.random() < 0.55) {
           aliveAllies.forEach(a => a.atk = Math.round(a.atk * 1.25));
-          aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 1.15 * skillBoost));
+          aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 1.15 * skillBoost, false, {aoe:true}));
           addLog(`📈 <strong>${actor.name}</strong> 開出【牛市暴漲】！<span class="tag-buff">🟢 全隊攻+25%</span> <span class="tag-dmg">⚔️ 全體115%轟炸</span>`);
         } else {
           const dmg = dealDamage(actor, mainTarget, actor.atk * 1.65 * skillBoost);
@@ -3005,12 +3373,12 @@ function castSkill(actor, allies, opponents, mainTarget) {
     }
     case 'loki': {
       const dmg = dealDamage(actor, mainTarget, actor.atk * 1.7 * skillBoost);
-      aliveAllies.forEach(a => { if (a !== actor) a.mp = Math.min(a.maxMp, a.mp + 30); });
+      aliveAllies.forEach(a => { if (a !== actor) Evolution.mana(a, 30, actor); });
       addLog(`🦊 <strong>${actor.name}</strong> 施放【時間線收割】➔ ${mainTarget.name} <span class="tag-dmg">⚔️ -${dmg}</span> <span class="tag-buff">🟢 隊友+30 MP</span>`);
       break;
     }
     case 'andy': {
-      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 1.85 * skillBoost));
+      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 1.85 * skillBoost, false, {aoe:true}));
       addLog(`🛢️ <strong>${actor.name}</strong> 引爆【負油價末日震波】<span class="tag-dmg">⚔️ 全體185%轟炸</span>！`);
       break;
     }
@@ -3025,7 +3393,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
     case 'dashen': {
       const hasPartner = aliveAllies.some(a => a.id === 'loki' || a.id === 'hugo');
       const mult = hasPartner ? 1.7 : 1.25;
-      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * mult * skillBoost));
+      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * mult * skillBoost, false, {aoe:true}));
       addLog(`👑 <strong>${actor.name}</strong> 降下【神諭裁決】<span class="tag-dmg">⚔️ 全體${Math.round(mult*100)}%轟炸</span>！`);
       break;
     }
@@ -3074,15 +3442,15 @@ function checkAndyRitual(allies, opponents) {
   const andy = allies.find(u => u.id === 'andy' && u.hp > 0 && u.inRitual);
   if (!andy) return;
   andy.ritualCount += 1;
-  BattleFX.queue(andy, andy.ritualCount >= 3 ? 'arrival' : 'ritual');
-  addLog(`🕯️ <strong>${andy.name}</strong> 完成第 <strong>${andy.ritualCount} / 3</strong> 個柏克末日儀式！`);
+  BattleFX.queue(andy, andy.ritualCount >= Evolution.ritualNeed(andy) ? 'arrival' : 'ritual');
+  addLog(`🕯️ <strong>${andy.name}</strong> 完成第 <strong>${andy.ritualCount} / ${Evolution.ritualNeed(andy)}</strong> 個柏克末日儀式！`);
 
-  if (andy.ritualCount >= 3) {
+  if (andy.ritualCount >= Evolution.ritualNeed(andy)) {
     andy.inRitual = false;
     battleComboLogs.push(`☄️ Andy安迪 完成 3 儀式攜帶【負油價隕石】降臨`);
     addLog(`☄️ <span class="tag-event">末日降臨</span> <strong>Andy安迪</strong> 攜帶負油價隕石降臨戰場 <span class="tag-dmg">⚔️ 全體220%轟炸</span>！`);
     opponents.filter(u => u.hp > 0 && !u.inRitual).forEach(e => {
-      dealDamage(andy, e, andy.atk * 2.2);
+      dealDamage(andy, e, andy.atk * Evolution.ritualDamage(andy), false, {aoe:true});
     });
 
     checkNemesisEasterEgg(andy);
@@ -3125,6 +3493,7 @@ function showBattleReportModal(isWin) {
   const sortedByDmg = [...playerRoster].sort((a, b) => (b.stats?.dmgDealt || 0) - (a.stats?.dmgDealt || 0));
   const mvpUnit = sortedByDmg[0];
   const uniqueCombos = [...new Set(battleComboLogs)];
+  const evolutionReport = playerRoster.map(u => Evolution.info(u) ? `${u.name}：${Evolution.info(u).name}` : '').filter(Boolean);
 
   content.innerHTML = `
     <h2 class="modal-title" style="color:${isWin ? 'var(--discord-green)' : 'var(--discord-red)'};">
@@ -3133,6 +3502,7 @@ function showBattleReportModal(isWin) {
     <p class="modal-sub">MVP 最佳表現：<strong>${mvpUnit ? `${mvpUnit.icon} ${mvpUnit.name} (輸出 ${mvpUnit.stats?.dmgDealt || 0} 傷害)` : '無'}</strong></p>
 
     ${GameUI.reportSummary(isWin)}
+    ${evolutionReport.length ? `<p class="evolution-report">✦ 本局分支：${evolutionReport.map(x => GameText.escape(x)).join(' · ')}</p>` : ''}
     <details class="report-full"><summary>📊 展開完整隊員統計</summary><div class="stats-scroll"><table class="stats-table">
       <thead>
         <tr>
@@ -3244,6 +3614,7 @@ function renderCodexTab(tab) {
           <div class="choice-traits">${h.traits.map(t => `<span class="trait-pill">${t}</span>`).join('')}</div>
           <div class="choice-desc">
             ${GameText.hero(h)}
+            ${Evolution.catalog(h)}
             ${h.easterEggHint ? renderEasterHint(h.easterEggHint) : ''}
           </div>
         </div>
