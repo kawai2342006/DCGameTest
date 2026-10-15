@@ -372,6 +372,11 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
 @media(prefers-reduced-motion:reduce){.art-open img {transition:none;}.art-open:hover img {transform:none;}}
 .reduce-effects .art-open:hover img {transform:none;}
 
+/* 卡圖開關只收起插畫區，整個區塊不佔空間；戰況及文字保留。 */
+.hide-card-art .hero-art {display:none;}
+#cardArtBtn {min-height:44px;white-space:nowrap;}
+#cardArtBtn:focus-visible {outline:3px solid var(--tone-mana);outline-offset:3px;}
+
 </style>
 <style>
 /* 每個過場使用獨立場景，所有動畫只在入場播放一次。 */
@@ -462,6 +467,7 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
     <h1>♟️ DC BON 全明星自動戰棋 <span style="font-size:0.75rem; color:var(--text-muted);">v3.1 霓虹獎勵場景版</span></h1>
   </div>
   <div class="header-right">
+    <button type="button" class="codex-btn" id="cardArtBtn" aria-pressed="true" title="顯示或隱藏角色插畫，收起後可騰出更多空間觀看戰況" onclick="GameReading.toggleArt()">🖼 卡圖：開</button>
     <button class="codex-btn" id="textSizeBtn" aria-pressed="false" onclick="GameReading.toggleText()">字級 A＋</button>
     <button class="codex-btn" id="motionBtn" aria-pressed="false" onclick="GameReading.toggleMotion()">◌ 特效：開</button>
     <button class="codex-btn" onclick="openCodex()">📘 遊戲圖鑑</button>
@@ -472,7 +478,7 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
   <div class="world-copy"><div class="world-eyebrow">DC BON · ALL-STAR TACTICS</div><h2>朋友集結，<span>異能開戰。</span></h2><p>跨越時間線，召集你嘅全明星小隊。</p><div class="world-tags"><span>都市異能</span><span>羈絆聯動</span><span>金融風暴</span></div></div>
   <div class="world-deck" aria-hidden="true"><div class="deck-card deck-left"></div><div class="deck-card deck-right"></div><div class="deck-card deck-front"></div><div class="deck-orbit"></div></div>
 </section>
-<details class="reading-guide"><summary><strong>文字配色指南</strong> · 點開查看；卡片先讀摘要，再展開完整說明</summary><div class="color-key"><span class="txt-damage">⚔ 傷害／敵方目標</span><span class="txt-heal">＋ 治療／生命</span><span class="txt-mana">◆ 魔力</span><span class="txt-buff">↑ 增益</span><span class="txt-condition">◇ 條件／聯動</span><span class="txt-danger">↓ 弱化／干擾</span></div><p>顏色搭配圖示與標籤，數值加粗；紫色標籤先確認觸發條件。右上角可放大文字或減少特效。</p></details>
+<details class="reading-guide"><summary><strong>文字配色指南</strong> · 點開查看；卡片先讀摘要，再展開完整說明</summary><div class="color-key"><span class="txt-damage">⚔ 傷害／敵方目標</span><span class="txt-heal">＋ 治療／生命</span><span class="txt-mana">◆ 魔力</span><span class="txt-buff">↑ 增益</span><span class="txt-condition">◇ 條件／聯動</span><span class="txt-danger">↓ 弱化／干擾</span></div><p>顏色搭配圖示與標籤，數值加粗；紫色標籤先確認觸發條件。右上角可開關卡圖、放大文字或減少特效；手機可關閉卡圖，留更多空間觀看戰況。</p></details>
 
 <div class="status-bar">
   <div class="status-box">
@@ -925,17 +931,25 @@ const GameReading = (() => {
   const set = (key,value) => { try { localStorage.setItem(key,value); } catch {} };
   let motion = get('dcbon-motion') !== 'off';
   let large = get('dcbon-large') === 'on';
+  let art = get('dcbon-card-art') !== 'off';
   function apply() {
     document.body.classList.toggle('reduce-effects',!motion);
     document.body.classList.toggle('large-copy',large);
+    document.body.classList.toggle('hide-card-art',!art);
+    const artBtn = document.getElementById('cardArtBtn');
+    if (artBtn) {
+      artBtn.setAttribute('aria-pressed',String(art));
+      artBtn.textContent = art ? '🖼 卡圖：開' : '🖼 卡圖：關';
+    }
     document.getElementById('motionBtn')?.setAttribute('aria-pressed',String(!motion));
     document.getElementById('textSizeBtn')?.setAttribute('aria-pressed',String(large));
     const btn = document.getElementById('motionBtn'); if (btn) btn.textContent = motion ? '◌ 特效：開' : '◌ 特效：減少';
   }
   function toggleMotion() { motion=!motion; set('dcbon-motion',motion?'on':'off'); apply(); }
   function toggleText() { large=!large; set('dcbon-large',large?'on':'off'); apply(); }
+  function toggleArt() { art=!art; set('dcbon-card-art',art?'on':'off'); apply(); }
   apply();
-  return {toggleMotion,toggleText,reduced:() => !motion || matchMedia('(prefers-reduced-motion: reduce)').matches};
+  return {toggleMotion,toggleText,toggleArt,reduced:() => !motion || matchMedia('(prefers-reduced-motion: reduce)').matches};
 })();
 
 </script>
@@ -1090,7 +1104,7 @@ function updateModeControl() {
 }
 function toggleSoulsMode() {
   if (modeLocked || currentStage !== 1 || playerRoster.length > 0) return;
-  if (!soulsMode && !confirm('🔥 開啟魂系模式？\n\n一命到底：任何一場戰鬥敗北，本局立即結束，不能返回調整站位重試，必須由第 1 關重新開始。\n\n第 5 關勝出仍未通關：須用現有隊伍（最多 4 人）迎戰第 6 關的 5 名敵人，打贏才是真正勝利。第 5 關後不再招募或獲得增幅。\n\n選定初始英雄後，本局模式將鎖定。確定接受挑戰？')) return;
+  if (!soulsMode && !confirm('🔥 開啟魂系模式？\n\n一命到底：任何一場戰鬥敗北，本局立即結束，不能返回調整站位重試，必須由第 1 關重新開始。\n\n選定初始英雄後，本局模式將鎖定。確定接受挑戰？')) return;
   soulsMode = !soulsMode;
   updateModeControl();
   updateUI();
