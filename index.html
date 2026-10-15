@@ -459,6 +459,108 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
 .reduce-effects .defeat-shot,.reduce-effects .defeat-copy h2,.reduce-effects .defeat-regret {animation:none!important;}
 
 </style>
+<style>
+/* Tactical layout: reuse existing neon art and semantic colours. */
+header {position:relative;z-index:40;gap:10px;}
+.header-right {gap:8px;}
+.settings-menu {position:relative;}
+.settings-menu>summary,.status-box>summary,.battle-log-panel>summary,.report-full>summary {cursor:pointer;line-height:1.6;font-weight:700;}
+.settings-menu>summary {padding:8px 12px;min-height:44px;background:#25314f;border:1px solid #8197c27a;border-radius:8px;}
+.settings-popover {position:absolute;right:0;top:calc(100% + 8px);width:min(290px,calc(100vw - 28px));padding:14px;display:flex;flex-direction:column;gap:10px;background:#172239;border:1px solid #7a8fb2;border-radius:12px;box-shadow:0 14px 45px #000b;max-height:75dvh;overflow:auto;}
+.settings-popover p {font-size:.78rem;line-height:1.65;color:#bfccdc;}
+.settings-popover button {min-height:44px;white-space:normal;}
+.status-box>summary {font-size:.8rem;color:#d1deee;}
+.status-box[open]>.badge-list {margin-top:10px;}
+.run-started .world-banner {display:none;}
+body[data-phase="battle"]>.reading-guide {display:none;}
+body[data-phase="battle"] .status-bar {gap:6px;margin-bottom:8px;}
+body[data-phase="battle"] .status-box {padding:7px 12px;}
+.battle-hud {display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.78rem;color:#c4d2e8;}
+#phaseLabel {color:#9ffff0;font-weight:700;}
+.battle-events {border:1px solid #6c8d9b66;background:#101a30eb;border-radius:9px;padding:10px 12px;}
+#actionLine {font-size:.88rem;font-weight:700;line-height:1.5;color:#f8eccd;overflow-wrap:anywhere;}
+#eventLine {font-size:.78rem;line-height:1.6;color:#c6b9ec;margin-top:5px;max-height:3.2em;overflow-y:auto;}
+.team-header {gap:6px;flex-wrap:wrap;}
+.team-header small {display:block;font-size:.72rem;color:#b3c6d6;}
+.unit-card.acting-unit {outline:2px solid #f5d58d;outline-offset:2px;box-shadow:0 0 0 4px #f5d58d22;}
+.unit-card.targeted-unit {border-right:4px solid #ff929b;}
+.unit-detail-btn {min-height:36px;padding:6px 10px;border:1px solid #688ba5;border-radius:7px;background:#182941;color:#dceaf9;cursor:pointer;margin-top:7px;align-self:flex-end;}
+.battle-log-panel {flex:1;min-width:0;background:#111c33;border:1px solid #6278a56e;border-radius:10px;align-self:start;}
+.battle-log-panel>summary {padding:12px;font-size:.82rem;color:#c6d6e9;}
+.battle-log-panel .log-box {border:0;border-radius:0 0 10px 10px;}
+.controls-box {width:260px;justify-content:start;}
+.selection-preview {text-align:left;display:flex;flex-direction:column;gap:5px;border:1px solid #698d9d77;border-radius:8px;background:#101d30b8;padding:10px;margin-top:12px;font-size:.82rem;line-height:1.6;}
+.selection-preview strong {color:#e8d7a6;}
+.selection-preview small {font-size:.72rem;color:#b5c6d8;}
+.preview-gain {color:var(--tone-heal);}.preview-loss {color:var(--tone-danger);}
+.report-metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;}
+.report-metric {padding:14px 10px;border:1px solid #8b7ca377;border-radius:10px;background:#142239e8;display:flex;flex-direction:column;gap:7px;}
+.report-metric span {font-size:.78rem;color:#c5cee3;}.report-metric strong {font-size:.9rem;color:#f8e5b7;overflow-wrap:anywhere;}.report-metric b {font-size:1.3rem;color:#c7fff1;}
+.survivor-report {padding:12px;border:1px solid #d5909277;background:#382336b3;border-radius:9px;display:flex;flex-direction:column;gap:7px;text-align:left;font-size:.83rem;line-height:1.6;margin-bottom:14px;}
+.survivor-report small {color:#c7becb;}
+.report-full {text-align:left;background:#121f32;border-radius:9px;border:1px solid #65789666;}
+.report-full>summary {padding:12px;font-size:.86rem;color:#d5e4f6;}
+.unit-detail-modal {z-index:240;}
+.unit-detail-modal>.modal-content {max-width:620px;text-align:left;}
+.unit-detail-toolbar {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.unit-detail-toolbar h2 {font-size:1rem;line-height:1.6;color:#ffe7b3;}.unit-detail-toolbar button {flex:none;min-height:44px;}
+.detail-note {font-size:.8rem;color:#bdd1e1;margin-bottom:12px;line-height:1.6;}
+.detail-values {display:flex;gap:12px;flex-wrap:wrap;padding:12px;background:#102137;border-radius:8px;margin-bottom:12px;line-height:1.8;}
+.detail-traits>div {padding:10px 0;border-bottom:1px solid #7587a044;font-size:.85rem;line-height:1.7;}
+.detail-traits .tt-title {display:none;}
+button:focus-visible,summary:focus-visible {outline:3px solid #a5f5ee;outline-offset:3px;}
+.large-copy .selection-preview,.large-copy #actionLine,.large-copy #eventLine {font-size:1rem;}
+@media(min-width:801px) {.battle-log-panel {min-height:48px;}}
+@media(max-width:800px) {
+  body {padding:10px 10px 110px;}
+  header {padding:10px 12px;margin-bottom:8px;}
+  .title-area h1 {font-size:1rem;}.title-area h1>span {display:none;}
+  .header-right {width:100%;justify-content:space-between;gap:6px;}
+  .settings-popover {position:fixed;right:12px;top:115px;}
+  .codex-btn {min-height:44px;font-size:.78rem;padding:6px 10px;}
+  .stage-badge {font-size:.73rem;padding:6px 9px;}
+  .status-bar {gap:6px;margin-bottom:8px;}.status-box {min-width:0;flex:1;padding:9px;}
+  .status-box>summary {font-size:.75rem;}.badge {font-size:.75rem;}
+  .arena {padding:10px;gap:10px;}
+  .battle-hud {font-size:.72rem;}
+  .battle-events {padding:8px 9px;}
+  .bottom-section {margin-top:8px;}
+  .controls-box {position:fixed;bottom:0;left:0;right:0;z-index:45;width:auto;display:grid;grid-template-columns:1.6fr 1fr;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0;background:#14243af5;backdrop-filter:blur(10px);}
+  .controls-box .btn {min-height:46px;font-size:.82rem;padding:9px;}
+  .battle-log-panel {width:100%;}
+  .mobile-tactical .battlefield {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:10px;min-height:0;}
+  .mobile-tactical .unit-grid {grid-template-columns:minmax(0,1fr);gap:8px;flex:none;}
+  .mobile-tactical .team-column {gap:8px;}
+  .mobile-tactical .team-header {font-size:.77rem;line-height:1.5;min-height:48px;padding-bottom:6px;}
+  .mobile-tactical .team-header small {display:none;}
+  .mobile-tactical #enemyStageName {font-size:.67rem;color:#edc1d2;}
+  .mobile-tactical .unit-card {padding:7px;border-radius:8px;min-width:0;}
+  .mobile-tactical .unit-card .hero-art,.mobile-tactical .unit-stats,.mobile-tactical .unit-skill-tag,.mobile-tactical .unit-card .easter-details {display:none;}
+  .mobile-tactical .unit-top {display:block;margin-bottom:2px;}
+  .mobile-tactical .unit-name {display:flex;align-items:start;gap:3px;flex-wrap:wrap;line-height:1.4;font-size:.8rem;}
+  .mobile-tactical .unit-name>span:first-child {overflow-wrap:anywhere;}
+  .mobile-tactical .stars {font-size:.65rem;overflow-wrap:anywhere;}
+  .mobile-tactical .pos-tag {display:block;margin:3px 0 0;padding:2px 3px;font-size:.62rem;white-space:normal;line-height:1.5;}
+  .mobile-tactical .bars {gap:4px;margin:5px 0;}
+  .mobile-tactical .bar-wrap {height:18px;}
+  .mobile-tactical .bar-mechanic {display:none;}
+  .mobile-tactical .bar-text {font-size:.61rem;white-space:nowrap;overflow:hidden;}
+  .mobile-tactical .move-btns {gap:4px;}
+  .mobile-tactical .move-btns button {min-height:36px;font-size:.65rem;padding:5px 2px;}
+  .mobile-tactical .unit-detail-btn {width:100%;min-height:36px;font-size:.72rem;margin-top:3px;}
+  .mobile-tactical .float-text {font-size:.79rem;max-width:100%;right:2px;white-space:normal;}
+  .mobile-tactical .unit-card.anim-lunge-ally,.mobile-tactical .unit-card.anim-lunge-enemy {animation:none;}
+  .mobile-tactical .unit-card.anim-hit {animation:none;background:#522f45;}
+  .report-metrics {gap:6px;}.report-metric {padding:10px 6px;}.report-metric span {font-size:.68rem;}.report-metric strong {font-size:.77rem;}.report-metric b {font-size:1.05rem;}
+  .large-copy.mobile-tactical .unit-name {font-size:.96rem;}.large-copy.mobile-tactical .bar-text {font-size:.73rem;}.large-copy.mobile-tactical .pos-tag {font-size:.76rem;}
+}
+@media(max-width:360px) {
+  .mobile-tactical .battlefield {gap:7px;}.mobile-tactical .unit-card {padding:6px;}
+  .report-metrics {grid-template-columns:1fr;}.report-metric {display:grid;grid-template-columns:1fr 1fr;}.report-metric b {grid-column:2;grid-row:1/3;align-self:center;}
+}
+@media(prefers-reduced-motion:reduce) {.unit-card {transition:none;}}
+
+</style>
 </head>
 <body>
 
@@ -468,9 +570,14 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
   </div>
   <div class="header-right">
     <button type="button" class="codex-btn" id="cardArtBtn" aria-pressed="true" title="顯示或隱藏角色插畫，收起後可騰出更多空間觀看戰況" onclick="GameReading.toggleArt()">🖼 卡圖：開</button>
-    <button class="codex-btn" id="textSizeBtn" aria-pressed="false" onclick="GameReading.toggleText()">字級 A＋</button>
-    <button class="codex-btn" id="motionBtn" aria-pressed="false" onclick="GameReading.toggleMotion()">◌ 特效：開</button>
-    <button class="codex-btn" onclick="openCodex()">📘 遊戲圖鑑</button>
+    <details class="settings-menu" id="settingsMenu"><summary>⚙ 設定</summary><div class="settings-popover">
+      <button type="button" class="codex-btn" id="compactBtn" aria-pressed="true" onclick="GameUI.toggleCompact()">手機精簡戰場：開</button>
+      <p>精簡戰場使用角色圖示；關閉精簡可顯示完整卡片與卡圖。</p>
+      <button type="button" class="codex-btn" id="textSizeBtn" aria-pressed="false" onclick="GameReading.toggleText()">字級 A＋</button>
+      <button type="button" class="codex-btn" id="motionBtn" aria-pressed="false" onclick="GameReading.toggleMotion()">◌ 特效：開</button>
+      <button type="button" class="codex-btn" onclick="openCodex();document.getElementById('settingsMenu').open=false">📘 遊戲圖鑑</button>
+      <button type="button" class="btn btn-danger" onclick="resetGame();document.getElementById('settingsMenu').open=false">🔄 重新開局</button>
+    </div></details>
     <div class="stage-badge" id="stageDisplay">準備階段 - 第 1 / 5 關</div>
   </div>
 </header>
@@ -478,31 +585,33 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
   <div class="world-copy"><div class="world-eyebrow">DC BON · ALL-STAR TACTICS</div><h2>朋友集結，<span>異能開戰。</span></h2><p>跨越時間線，召集你嘅全明星小隊。</p><div class="world-tags"><span>都市異能</span><span>羈絆聯動</span><span>金融風暴</span></div></div>
   <div class="world-deck" aria-hidden="true"><div class="deck-card deck-left"></div><div class="deck-card deck-right"></div><div class="deck-card deck-front"></div><div class="deck-orbit"></div></div>
 </section>
-<details class="reading-guide"><summary><strong>文字配色指南</strong> · 點開查看；卡片先讀摘要，再展開完整說明</summary><div class="color-key"><span class="txt-damage">⚔ 傷害／敵方目標</span><span class="txt-heal">＋ 治療／生命</span><span class="txt-mana">◆ 魔力</span><span class="txt-buff">↑ 增益</span><span class="txt-condition">◇ 條件／聯動</span><span class="txt-danger">↓ 弱化／干擾</span></div><p>顏色搭配圖示與標籤，數值加粗；紫色標籤先確認觸發條件。右上角可開關卡圖、放大文字或減少特效；手機可關閉卡圖，留更多空間觀看戰況。</p></details>
+<details class="reading-guide"><summary><strong>文字配色指南</strong> · 點開查看；卡片先讀摘要，再展開完整說明</summary><div class="color-key"><span class="txt-damage">⚔ 傷害／敵方目標</span><span class="txt-heal">＋ 治療／生命</span><span class="txt-mana">◆ 魔力</span><span class="txt-buff">↑ 增益</span><span class="txt-condition">◇ 條件／聯動</span><span class="txt-danger">↓ 弱化／干擾</span></div><p>顏色搭配圖示與標籤，數值加粗；紫色標籤先確認觸發條件。右上角可開關卡圖；設定內可調整字級、特效及手機精簡戰場。手機短卡可點「詳情」閱讀，戰鬥會繼續。</p></details>
 
 <div class="status-bar">
-  <div class="status-box">
-    <h3>🔗 觸發羈絆 (滑鼠移至標籤查看效果)</h3>
+  <details class="status-box" id="synergyPanel" open>
+    <summary>🔗 隊伍羈絆 · 點開查看</summary>
     <div class="badge-list" id="synergyList">尚未上陣英雄</div>
-  </div>
-  <div class="status-box">
-    <h3>⚡ 海克斯增幅 (不重複抽取 | 滑鼠移至增幅查看說明)</h3>
+  </details>
+  <details class="status-box" id="augmentPanel" open>
+    <summary>⚡ 已有增幅 · 點開查看</summary>
     <div class="badge-list" id="augmentList">尚未獲得增幅</div>
-  </div>
+  </details>
 </div>
 
-<div class="arena">
+<div class="arena" id="battleFocus" tabindex="-1">
+  <div class="battle-hud"><span id="phaseLabel">準備開始</span><span id="aliveSummary"></span></div>
+  <div class="battle-events"><p id="actionLine">挑選英雄，組成你嘅全明星小隊。</p><p id="eventLine">重要技能與聯動會顯示喺呢度。</p></div>
   <div class="battlefield">
     <div class="team-column">
       <div class="team-header ally">
-        <span>🟢 我方小隊 (上限 4 人 | 1號位優先承傷 & 宿敵叫陣位)</span>
+        <span>🟢 我方小隊 <small>1 號位優先承傷</small></span>
         <span id="allyCount">0 / 4</span>
       </div>
       <div class="unit-grid" id="allyGrid"></div>
     </div>
     <div class="team-column">
       <div class="team-header enemy">
-        <span>🔴 鏡像對手 (DC 守門員)</span>
+        <span>🔴 敵方守門員</span>
         <span id="enemyStageName">第 1 關對手</span>
       </div>
       <div class="unit-grid" id="enemyGrid"></div>
@@ -514,11 +623,11 @@ header {background:linear-gradient(115deg,#172746ed,#291e48ec);border:1px solid 
   <div class="controls-box">
     <button class="btn btn-primary" id="startBattleBtn" onclick="startBattle()">⚔️ 開始本關戰鬥</button>
     <button class="btn btn-secondary" id="speedBtn" onclick="toggleSpeed()">⏩ 戰鬥速度: 1x</button>
-    <button class="btn btn-danger" onclick="resetGame()">🔄 重新開局</button>
+
   </div>
-  <div class="log-box" id="battleLog">
+  <details class="battle-log-panel"><summary>📜 完整戰鬥紀錄 · 點開查看</summary><div class="log-box" id="battleLog">
     <div class="log-entry">歡迎來到 **DC BON 全明星自動戰棋 v3.1**！戰鬥視窗已升級為彩色標籤（<span class="tag-buff">🟢 BUFF</span> <span class="tag-nerf">🔴 NERF</span> <span class="tag-dmg">⚔️ 傷害</span> <span class="tag-heal">💚 回血</span>）。</div>
-  </div>
+  </div></details>
 </div>
 
 <!-- 1. 選卡與海克斯增幅 Modal -->
@@ -1084,6 +1193,147 @@ const SceneFX = (() => {
 })();
 
 </script>
+<div class="modal-overlay unit-detail-modal hidden" id="unitDetailModal" role="dialog" aria-modal="true" aria-labelledby="unitDetailTitle" onclick="if(event.target===this)GameUI.closeUnit()"><div class="modal-content"><div class="unit-detail-toolbar"><h2 id="unitDetailTitle"></h2><button type="button" class="codex-btn" id="unitDetailClose" onclick="GameUI.closeUnit()">✕ 關閉</button></div><div id="unitDetailBody"></div></div></div>
+<script>
+/* Presentation only: no combat state writes, RNG, timers or balance changes. */
+const GameUI = (() => {
+  const esc = value => GameText.escape(String(value ?? ''));
+  let phase = '', actorKey = '', targetKeys = new Set(), returnFocus = null;
+  let compact = true;
+  try { compact = localStorage.getItem('dcbon-compact') !== 'off'; } catch {}
+  const el = id => document.getElementById(id);
+  const key = u => `${u.isAlly ? 'ally' : 'enemy'}:${u.id}`;
+  function applyCompact() {
+    document.body.classList.toggle('mobile-tactical', compact);
+    el('compactBtn').setAttribute('aria-pressed', String(compact));
+    el('compactBtn').textContent = `手機精簡戰場：${compact ? '開' : '關'}`;
+  }
+  function toggleCompact() {
+    compact = !compact;
+    try { localStorage.setItem('dcbon-compact', compact ? 'on' : 'off'); } catch {}
+    applyCompact();
+  }
+  function setPhase(next) {
+    if (phase !== next) {
+      phase = next;
+      document.body.setAttribute('data-phase', next);
+      ['synergyPanel','augmentPanel'].forEach(id => { el(id).open = next !== 'battle'; });
+    }
+    document.body.classList.toggle('run-started', playerRoster.length > 0);
+    el('phaseLabel').textContent = ({draft:'招募／強化',ready:'備戰 · 可調整站位',battle:'戰鬥進行中',report:'賽後戰報',finished:'本局結束'})[next] || '準備開始';
+  }
+  function clear() {
+    actorKey = ''; targetKeys.clear();
+    el('actionLine').textContent = '挑選英雄，組成你嘅全明星小隊。';
+    el('eventLine').textContent = '重要技能與聯動會顯示喺呢度。';
+    closeUnit(false);
+  }
+  function begin(actor, target) {
+    actorKey = key(actor); targetKeys.clear();
+    el('actionLine').textContent = actor.mp >= actor.maxMp
+      ? `${actor.isAlly ? '我方' : '敵方'} ${actor.name} · 施放【${actor.skillName}】`
+      : `${actor.isAlly ? '我方' : '敵方'} ${actor.name} → ${target.name} · 普通攻擊`;
+  }
+  function effect(unit, type) {
+    if (type === 'hit') targetKeys.add(key(unit));
+    if (type === 'skill') {
+      actorKey = key(unit);
+      el('actionLine').textContent = `${unit.isAlly ? '我方' : '敵方'} ${unit.name} · 施放【${unit.skillName}】`;
+    }
+  }
+  function event(entry) {
+    if (entry.querySelector('.tag-event,.tag-buff,.tag-nerf,.tag-mana,.tag-heal'))
+      el('eventLine').textContent = entry.textContent.replace(/\s+/g,' ').trim();
+  }
+  function sync() {
+    const next = battleEndPending ? 'report' : runFinished ? 'finished' : isBattling ? 'battle' : 'ready';
+    setPhase(next);
+    el('startBattleBtn').textContent = isBattling ? '⚔ 戰鬥進行中' : runFinished ? '本局已結束' : '⚔ 開始本關戰鬥';
+    const a = playerRoster.filter(u=>u.hp>0).length, e = enemyRoster.filter(u=>u.hp>0).length;
+    el('aliveSummary').textContent = `存活：我方 ${a}／${playerRoster.length} · 敵方 ${e}／${enemyRoster.length}`;
+    if (!isBattling) {
+      actorKey = ''; targetKeys.clear();
+      el('actionLine').textContent = !playerRoster.length && !battleEndPending && !runFinished ? '挑選英雄，組成你嘅全明星小隊。' : battleEndPending || runFinished ? '戰鬥已結束 · 查看戰報與下一步' : '備戰中 · 1 號位優先承傷，點角色查看詳情';
+    }
+    [playerRoster,enemyRoster].forEach((roster, side)=>roster.forEach((u,i)=>{
+      const card = el(`${side === 0 ? 'ally' : 'enemy'}_card_${i}`);
+      if (!card) return;
+      card.classList.toggle('acting-unit', isBattling && actorKey === key(u));
+      card.classList.toggle('targeted-unit', isBattling && targetKeys.has(key(u)));
+    }));
+  }
+  // Read current trait thresholds and weights; preview a copied roster only.
+  function thresholds(name) {
+    if (name === '最強之兩人') return [1];
+    return [...new Set((TRAIT_INFO[name]?.req.match(/\d+/g)||[]).map(Number))].sort((a,b)=>a-b);
+  }
+  function projected(hero) {
+    const h = {...hero, traits:[...hero.traits]};
+    if (h.id === 'stock_opp' && playerAugments.some(a=>a.id==='aug_baemon')) h.traits=['狂熱信仰'];
+    return h;
+  }
+  function changes(next) {
+    const before=getActiveSynergies(playerRoster), after=getActiveSynergies(next), lines=[];
+    [...new Set([...Object.keys(before),...Object.keys(after)])].forEach(name=>{
+      const a=before[name]||0, b=after[name]||0;
+      if(a===b)return;
+      const ts=thresholds(name), oldTier=ts.filter(t=>a>=t).length, newTier=ts.filter(t=>b>=t).length;
+      if(newTier>oldTier) lines.push(`<span class="preview-gain">↑ ${esc(name)} ${a}→${b} · ${oldTier?'提升羈絆':'啟動羈絆'}</span>`);
+      else if(newTier<oldTier) lines.push(`<span class="preview-loss">↓ ${esc(name)} ${a}→${b} · ${newTier?'降低羈絆':'失去羈絆'}</span>`);
+      else {
+        const goal=ts.find(t=>t>b);
+        lines.push(`<span>${esc(name)} ${a}→${b}${goal?` · 距 ${goal} 人門檻差 ${goal-b}`:' · 門檻已達成'}</span>`);
+      }
+    });
+    return lines.length?lines.join(''):'<span>羈絆門檻維持不變</span>';
+  }
+  function draftPreview(hero, replaceIndex = -1) {
+    const existing=playerRoster.find(u=>u.id===hero.id);
+    if(existing && replaceIndex<0) return `<div class="selection-preview"><strong>⭐ 升星 ★${existing.stars} → ★${existing.stars+1}</strong><span>基礎生命 ${existing.baseHp} → ${Math.round(existing.baseHp*1.35)}</span><span>基礎攻擊 ${existing.baseAtk} → ${Math.round(existing.baseAtk*1.35)}</span><small>未計羈絆與增幅；羈絆人數維持不變。</small></div>`;
+    if(playerRoster.length>=4 && replaceIndex<0) return '<div class="selection-preview"><strong>隊伍已滿 · 下一步選擇替換</strong><span>替換頁會列出各位置嘅羈絆得失。</span></div>';
+    const next=playerRoster.map(u=>projected(u));
+    if(replaceIndex>=0) next[replaceIndex]=projected(hero); else next.push(projected(hero));
+    return `<div class="selection-preview"><strong>${replaceIndex>=0?'↔ 替換後預覽':`＋ 隊伍 ${playerRoster.length} → ${next.length} 人`}</strong>${changes(next)}<small>按現有羈絆門檻預覽；實際效果沿用遊戲規則。</small></div>`;
+  }
+  function reportSummary(win) {
+    const specs=[['⚔ 輸出最高','dmgDealt'],['🛡 承傷最多','dmgTaken'],['＋ 治療／護盾貢獻','healed']];
+    const cards=specs.map(([label,stat])=>{
+      const best=[...playerRoster].sort((a,b)=>(b.stats?.[stat]||0)-(a.stats?.[stat]||0))[0];
+      const value=best?.stats?.[stat]||0;
+      return `<div class="report-metric"><span>${label}</span><strong>${value>0?esc(best.name):'未有紀錄'}</strong><b>${value.toLocaleString()}</b></div>`;
+    }).join('');
+    const survivors=enemyRoster.filter(u=>u.hp>0);
+    return `<div class="report-metrics">${cards}</div>${!win?`<div class="survivor-report"><strong>敵方剩餘 ${survivors.length} 人</strong>${survivors.map(u=>`<span>${esc(u.icon)} ${esc(u.name)} · HP ${Math.max(0,u.hp)}／${u.maxHp}</span>`).join('')}<small>顯示戰鬥結束時數值。</small></div>`:''}`;
+  }
+  function openUnit(side,index) {
+    const u=(side==='ally'?playerRoster:enemyRoster)[index];if(!u)return;
+    returnFocus=document.activeElement;
+    el('unitDetailTitle').textContent=`${side==='ally'?'我方':'敵方'} · ${u.name} ★${u.stars}`;
+    el('unitDetailBody').innerHTML=`<p class="detail-note">查看當刻狀態；戰鬥會繼續進行。</p><div class="detail-values"><span>♥ HP ${Math.max(0,u.hp)}／${u.maxHp}</span><span>◆ MP ${u.mp}／${u.maxMp}</span><span>⚔ 攻 ${u.atk}</span><span>⚡ 速 ${u.curSpd||u.spd}</span></div><p>${u.inRitual?`🔮 儀式 ${u.ritualCount}/3 · `:''}${u.isWeakened?'↓ 弱化中 · ':''}${u.sisMarks?`💅 印記 ${u.sisMarks} · `:''}${index===0?'🛡 1 號前排':'後排 '+(index+1)+' 號位'}</p><div class="detail-traits">${u.traits.map(t=>`<div><strong>${esc(t)}</strong>${GameText.tooltip(t,TRAIT_INFO[t]?.desc||'詳見遊戲規則')}</div>`).join('')}</div>${GameText.hero(u)}${u.easterEggHint?renderEasterHint(u.easterEggHint):''}`;
+    el('unitDetailModal').classList.remove('hidden'); el('unitDetailClose').focus();
+  }
+  function closeUnit(restore=true) {
+    el('unitDetailModal').classList.add('hidden');
+    if(restore) {
+      if(returnFocus?.isConnected)returnFocus.focus();
+      else el('battleFocus').focus();
+    }
+  }
+  document.addEventListener('keydown',e=>{
+    if(el('unitDetailModal').classList.contains('hidden'))return;
+    if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeUnit();}
+    if(e.key==='Tab') {
+      const items=[...el('unitDetailModal').querySelectorAll('button,summary,a')];
+      const first=items[0],last=items[items.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+  applyCompact();
+  return {sync,setPhase,clear,begin,effect,event,toggleCompact,draftPreview,reportSummary,openUnit,closeUnit};
+})();
+
+</script>
 <script>
 // ================= 1. 遊戲全局狀態與統計 =================
 let currentStage = 1;
@@ -1159,6 +1409,7 @@ function showTraitTooltip(e, traitName) {
 // ================= 2. 初始化與流程控制 =================
 function initGame(preserveMode = false) {
   SceneFX.cancelDefeat();
+  GameUI.clear();
   soulsMode = preserveMode === true && soulsMode;
   modeLocked = false;
   runFinished = false;
@@ -1287,11 +1538,13 @@ function showHeroDraft(title, subtitle) {
           ${hero.easterEggHint ? renderEasterHint(hero.easterEggHint) : ''}
         </div>
       </div>
+      ${GameUI.draftPreview(hero)}
       <div class="choice-stats">${renderBaseStats(hero)}</div>
     `;
     card.onclick = (event) => { if (isReadingClick(event)) return; hideTooltip(); selectHero(hero); };
     grid.appendChild(card);
   });
+  GameUI.setPhase('draft');
   SceneFX.draft(currentStage === 1 && playerRoster.length === 0 ? 'recruit-start' : 'recruit-reward', currentStage);
   overlay.classList.remove('hidden');
 }
@@ -1341,6 +1594,7 @@ function showReplaceModal(newHero) {
         <h4><span>替換：${ally.icon} ${ally.name} (★${ally.stars})</span></h4>
         <div class="choice-desc">將此位置換成 <strong>${newHero.icon} ${newHero.name} (★1)</strong></div>
       </div>
+      ${GameUI.draftPreview(newHero, idx)}
       <div class="choice-stats">目前屬性：❤️ ${ally.baseHp} | ⚔️ ${ally.baseAtk}</div>
     `;
     card.onclick = (event) => {
@@ -1357,6 +1611,7 @@ function showReplaceModal(newHero) {
   skipCard.innerHTML = `<h4>🚫 不替換，維持現有陣容</h4><div class="choice-desc">直接進入海克斯增幅選擇階段</div>`;
   skipCard.onclick = () => proceedAfterHeroSelection();
   grid.appendChild(skipCard);
+  GameUI.setPhase('draft');
   SceneFX.draft('recruit-reward', currentStage);
 }
 
@@ -1417,6 +1672,7 @@ function showAugmentDraft(isBonus = false) {
     };
     grid.appendChild(card);
   });
+  GameUI.setPhase('draft');
   SceneFX.draft('augment', currentStage, isBonus);
   overlay.classList.remove('hidden');
 }
@@ -1588,6 +1844,7 @@ function moveUnit(index, dir) {
 
 function queueVisualEffect(unit, type, text = '') {
   if (type === 'hit' && unit.isAlly && unit.hp <= 0) lastFallenAlly = unit;
+  GameUI.effect(unit, type);
   visualQueue.push({ unit, type, text });
 }
 
@@ -1684,6 +1941,7 @@ function updateUI() {
 
   // DOM 繪製完成後，立即播放本回合的衝刺、震動與飄浮傷害數字！
   flushVisualQueue();
+  GameUI.sync();
 }
 
 function renderTeamGrid(containerId, roster, isAlly) {
@@ -1752,7 +2010,7 @@ function renderTeamGrid(containerId, roster, isAlly) {
               <div class="hp-pet-half" style="width:${petHalfWidth}%"></div>
               <div class="bar-divider"></div>
             ` : `<div class="hp-fill" style="width:${Math.round(hpPct)}%"></div>`}
-            <div class="bar-text">❤️ ${Math.max(0, u.hp)} / ${u.maxHp} ${hasDualBar ? (u.isWeakened ? '(本人血量-弱化)' : '(寵物護盾-強化)') : ''}</div>
+            <div class="bar-text">❤️ ${Math.max(0, u.hp)} / ${u.maxHp} <span class="bar-mechanic">${hasDualBar ? (u.isWeakened ? '(本人血量-弱化)' : '(寵物護盾-強化)') : ''}</span></div>
           </div>
           <div class="bar-wrap" onmouseenter="showTooltip(event, '💧 魔力值 (MP)', '普攻 +30 MP、受擊 +15 MP。集滿時下次行動自動施放大招！')" onmouseleave="scheduleTooltipHide()">
             <div class="mp-fill" style="width:${mpPct}%"></div>
@@ -1777,6 +2035,13 @@ function renderTeamGrid(containerId, roster, isAlly) {
         </div>
       ` : ''}
     `;
+    const detailButton = document.createElement('button');
+    detailButton.type = 'button';
+    detailButton.className = 'unit-detail-btn';
+    detailButton.textContent = 'ⓘ 詳情';
+    detailButton.setAttribute('aria-label', `查看${u.name}技能、羈絆及當刻狀態`);
+    detailButton.onclick = () => GameUI.openUnit(isAlly ? 'ally' : 'enemy', idx);
+    card.appendChild(detailButton);
     container.appendChild(card);
     restoreVisualEffects(card, u);
   });
@@ -2051,6 +2316,7 @@ function addLog(html, cls = '') {
     const kinds = {'tag-event':'log-synergy','tag-crit':'log-skill','tag-dmg':'log-dmg','tag-heal':'log-heal','tag-buff':'log-skill','tag-nerf':'log-danger','tag-mana':'log-mana'};
     if (tag) div.classList.add(kinds[[...tag.classList].find(name => kinds[name])]);
   }
+  GameUI.event(div);
   box.appendChild(div);
   while (box.children.length > 240) box.firstElementChild.remove();
   box.scrollTop = box.scrollHeight;
@@ -2246,6 +2512,7 @@ function executeUnitTurn(actor) {
   const target = getTarget(opponents);
   if (!target || isPausedForEvent) return;
 
+  GameUI.begin(actor, target);
   queueVisualEffect(actor, 'lunge');
   const extraMp = (actor.isAlly && playerAugments.some(a => a.id === 'aug_battery')) ? 15 : 0;
 
@@ -2510,6 +2777,7 @@ function checkThreeGodsCombo(actor, allies, opponents) {
 function handleBattleEnd(isWin) {
   if (battleEndPending || runFinished) return;
   clearInterval(battleInterval);
+  GameUI.closeUnit(false);
   isBattling = false;
   battleEndPending = true;
   if ((!isWin && soulsMode) || (isWin && currentStage >= getFinalStage())) runFinished = true;
@@ -2523,6 +2791,7 @@ function showBattleReportModal(isWin) {
   const modal = document.getElementById('reportModal');
   const content = document.getElementById('reportContent');
   modal.classList.remove('hidden');
+  GameUI.closeUnit(false);
 
   const sortedByDmg = [...playerRoster].sort((a, b) => (b.stats?.dmgDealt || 0) - (a.stats?.dmgDealt || 0));
   const mvpUnit = sortedByDmg[0];
@@ -2534,7 +2803,8 @@ function showBattleReportModal(isWin) {
     </h2>
     <p class="modal-sub">MVP 最佳表現：<strong>${mvpUnit ? `${mvpUnit.icon} ${mvpUnit.name} (輸出 ${mvpUnit.stats?.dmgDealt || 0} 傷害)` : '無'}</strong></p>
 
-    <div class="stats-scroll"><table class="stats-table">
+    ${GameUI.reportSummary(isWin)}
+    <details class="report-full"><summary>📊 展開完整隊員統計</summary><div class="stats-scroll"><table class="stats-table">
       <thead>
         <tr>
           <th>隊員名稱</th>
@@ -2553,7 +2823,7 @@ function showBattleReportModal(isWin) {
           </tr>
         `).join('')}
       </tbody>
-    </table></div>
+    </table></div></details>
 
     <div class="report-highlights" style="background:#1e1f22; padding:12px; border-radius:8px; text-align:left; margin:12px 0; font-size:0.84rem;">
       <strong style="color:var(--discord-yellow);">✨ 本場觸發的特殊聯動與機制亮點：</strong>
