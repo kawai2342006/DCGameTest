@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《DC BON 全明星自動戰棋》V4【硬核深淵：命數與極意】</title>
+<title>《DC BON 全明星自動戰棋》V4【PERSONA 人格分支】</title>
 
 
 
@@ -1057,6 +1057,10 @@ header{max-width:1320px;clip-path:none;border:2px solid var(--paper);box-shadow:
 @media(max-width:560px){.p5-cutin-overlay{top:30%;left:-7%;width:114%;}.persona-cut-in.p5-cutin-slash{height:245px;}.cutin-eye-window{top:20px;left:1%;right:1%;height:160px;clip-path:polygon(1% 20%,96% 0,100% 77%,3% 100%);}.tear-top{top:20px;}.tear-bottom{top:166px;}.p5-cutin-text{right:10%;max-width:79%;bottom:0;}.p5-cutin-name{font-size:1rem;}.p5-cutin-sub{font-size:.67rem;padding:3px 7px;}.cutin-kicker{font-size:.43rem;}.cutin-ink-flecks i:nth-child(2){top:145px;}.cutin-ink-flecks i:nth-child(3){top:175px;}.tesla-road{height:120px;top:55%;}.tesla-car{width:75vw;}.impact-burst{width:90px;height:90px;}.static-cutin{top:auto;left:auto;right:10px;bottom:15px;width:calc(100vw - 20px);}.static-cutin .persona-cut-in{height:auto;}}
 
 </style>
+<style>
+.branch-choices{grid-template-columns:repeat(2,minmax(0,1fr));max-width:960px;margin-inline:auto;align-items:stretch}.branch-choice{transform:none!important;display:flex;flex-direction:column;border:3px solid #fff;background:#111;color:#fff;position:relative;min-width:0}.branch-choice .hero-art{max-height:210px}.branch-choice .choice-desc{flex:1;font-size:.96rem;line-height:1.65}.branch-choice h4{font-size:1.3rem}.branch-kicker{background:#ec153c;color:#fff;padding:7px 12px;font-weight:900;letter-spacing:.08em;transform:skew(-5deg);margin:8px 0}.branch-B .branch-kicker{background:#fff;color:#111}.branch-select{background:#e90c35!important;color:#fff!important;border:2px solid #fff!important;border-radius:0!important;padding:14px!important;white-space:normal;font-size:1rem!important;min-height:52px;font-weight:900;cursor:pointer}.branch-select:focus-visible{outline:4px solid #ffe34a;outline-offset:4px}.branch-select:hover{background:#fff!important;color:#c60029!important}.branch-reading{margin:10px 0;padding:10px;background:#121212;border-left:4px solid #ed173e;text-align:left}.branch-reading>summary{cursor:pointer;font-weight:800;color:#ffe34a}.branch-copy{padding:8px 0;border-bottom:1px solid #555;line-height:1.6;font-size:.88rem}.branch-copy p{margin:6px 0}.branch-copy strong{color:#fff}.branch-badge{display:inline-block;background:#e5163c;color:#fff;padding:3px 7px;font-size:.72rem;font-weight:800;max-width:100%;white-space:normal}.unit-card.branch-B{border-color:#f8f3df!important}.unit-card.branch-A{border-color:#ed173e!important}.branch-awake-title{display:block;color:#ffe34a;font-weight:900;margin-top:6px}.large-copy .branch-copy,.large-copy .branch-choice .choice-desc{font-size:1.1rem}@media(max-width:700px){.branch-choices{grid-template-columns:1fr}.branch-choice .hero-art{max-height:160px}.branch-choice h4{font-size:1.15rem}.branch-choice .choice-desc{font-size:.92rem}.branch-select{width:100%}.branch-reading{padding:8px}}@media(prefers-reduced-motion:reduce){.branch-choice *{animation:none!important}}.reduce-effects .branch-choice *{animation:none!important}
+
+</style>
 </head>
 <body data-theme="p5">
 
@@ -1071,7 +1075,7 @@ header{max-width:1320px;clip-path:none;border:2px solid var(--paper);box-shadow:
   <div class="title-area">
     <h1>
       <span>♟️ 《DC BON 全明星自動戰棋》</span>
-      <span class="v4-tag">V4 · PHANTOM ALL-STARS</span>
+      <span class="v4-tag">V4 · PERSONA BRANCHES</span>
     </h1>
   </div>
   <div class="header-right">
@@ -1102,7 +1106,7 @@ header{max-width:1320px;clip-path:none;border:2px solid var(--paper);box-shadow:
   <div class="battlefield">
     <div class="team-column">
       <div class="team-header ally">
-        <span>🟢 我方小隊 (上限 4 人 | ★3 解鎖專屬極意 & 排除卡池)</span>
+        <span>🟢 我方小隊 (上限 4 人 | ★2 選路線 · ★3 覺醒)</span>
         <span id="allyCount">0 / 4</span>
       </div>
       <div class="unit-grid" id="allyGrid"></div>
@@ -1610,6 +1614,232 @@ const AUGMENT_POOL = [
 
 </script>
 <script>
+/* ★2/★3 分支：所有新增數值集中在此。A=原覺醒；B=替代覺醒。 */
+const BRANCH_TUNING = {
+ dc_tesla:{haste:15,turns:2,shield2:100,shield3:180,reduction:.20},
+ freeted:{shred:60,demonShield:.15,reviveShield:.20,reduction:.25,turns:2},
+ dv:{lowHp:.5,bonus:.15,shield:.15,counter:.60},
+ mouse_sis:{overflow:2,extraHeal:80,ward:1},
+ st_sis:{lowHp:.4,healBonus:.20,emergencyHp:.30,shield:160,heal:140,reduction:.25,turns:2},
+ icy_sis:{claw:.25,slow:15,turns:2,catStep:.40},
+ shijie_sis:{lowHp:.4,bonus:.20,mark:.60},
+ stock_opp:{singleBonus:.20,overflow:.50,bullShield:100,reapHeal:.40},
+ satsuki:{shield:70,extraWeaken:.10,strongWeaken:.20,turns:2},
+ loki:{lowMp:.30,bonus:.25,shield:90,saveHp:.15},
+ andy:{landBonus:.15,turns:2,ritualShield:60,landShield:180,weaken:.15},
+ aming:{shred:60,mpShare:.30,mpCap:25},
+ dashen:{partnerBonus:.10,mark2:.40,mark3:.75},
+ hugo:{bonus:.10,rift2:.65,rift3:1.0,weaken:.15,shield:100,turns:2},
+ dvp:{reduction:.10,reflect:.75,consume:.50,cap:3,shred:100},
+ ansir:{bonus:.15,haste:15,haste3:20,shield:100,turns:2},
+ lg:{shield:50,shred:80,damage3:2.25,leech:.50},
+ andy_opp_fused:{basicBonus:.15,heal:100,shield:200,reduction:.15,turns:2},
+ baemon:{selfHaste:10,teamHaste:10,heal:80,shield:100}
+};
+const pct=v=>`${Math.round(v*100)}%`;
+const BRANCH_PATHS = {
+ dc_tesla:(c=>({A:[`暴走司機`,`極限雙重人格・全速走數`,`大招後自身速度 +${c.haste}，持續自身 ${c.turns} 次行動。`,`沿用原 ★3：開局全隊攻 +35%；雙人格常駐、綁人撞擊 +150% 傷害、敵全體減速。`],B:[`走數車隊`,`全員上車・安全撤資`,`大招為血量比例最低友軍提供 ${c.shield2} 護盾。`,`大招改為最低血量比例的 2 名友軍各獲 ${c.shield3} 護盾、減傷 ${pct(c.reduction)}，持續各自 ${c.turns} 次行動；取代 A 線 ★3 爆發，保留原本隨機人格。`]}))(BRANCH_TUNING.dc_tesla),
+ freeted:(c=>({A:[`雷霆父親`,`父親的腳毛`,`擴散閃電命中前額外削除每名敵人 ${c.shred} 護盾。`,`沿用原 ★3：速度 +25%，每 3 下普攻觸發擴散閃電。`],B:[`不滅鬼王`,`無慘・百鬼歸還`,`隊友全滅觸發鬼化時，額外獲自身最大生命 ${pct(c.demonShield)} 護盾。`,`鬼化擊殺復活的隊友額外獲其最大生命 ${pct(c.reviveShield)} 護盾、減傷 ${pct(c.reduction)}，持續其 ${c.turns} 次行動；閃電維持每 5 下。`]}))(BRANCH_TUNING.freeted),
+ dv:(c=>({A:[`逆鱗狂父`,`逆鱗父愛・狂戰連斬`,`自身生命低於 ${pct(c.lowHp)} 時，大招連擊傷害額外 +${pct(c.bonus)}。`,`沿用原 ★3：四連擊、自身最大生命 20% 護盾及 25% 吸血。`],B:[`分靈體守護者`,`父愛禁區`,`開局指定師姐為保護對象；沒有師姐則選其他生命上限最低隊友。大招為對象加其最大生命 ${pct(c.shield)} 護盾。`,`大招亦為自己加自身最大生命 ${pct(c.shield)} 護盾。保護對象受傷後反擊攻擊者 ${pct(c.counter)} ATK，每輪最多 1 次；不獲 A 線四連擊及吸血。`]}))(BRANCH_TUNING.dv),
+ mouse_sis:(c=>({A:[`超載茶師`,`宇治金時・超載茶會`,`回魔超出隊友 MP 上限的部分，每 1 MP 轉成 ${c.overflow} 護盾；不給無魔力角色回魔。`,`沿用原 ★3：隊友回魔提升至 55 MP，大招全隊額外 120 護盾。`],B:[`清心茶療`,`未來茶室・萬事退散`,`每次大招額外治療血量比例最低友軍 ${c.extraHeal} HP。`,`大招為每名友軍解除一項降攻或減速，並抵擋下一次降攻或減速；回魔維持 40 MP，不獲 A 線全隊盾。`]}))(BRANCH_TUNING.mouse_sis),
+ st_sis:(c=>({A:[`皇家醫護`,`BUBU 皇家防護罩`,`對生命比例低於 ${pct(c.lowHp)} 的隊友，治療量 +${pct(c.healBonus)}。`,`沿用原 ★3：大招治療額外 +35%，並附加治療量 40% 的護盾。`],B:[`急症守門員`,`BUBU・黃金急救時間`,`每場首次有可被攻擊的友軍受傷後存活且生命不高於 ${pct(c.emergencyHp)}，自動為該友軍提供 ${c.shield} 護盾。`,`該次救援追加 ${c.heal} HP 治療及減傷 ${pct(c.reduction)}，持續對象 ${c.turns} 次行動。每場仍僅 1 次，不復活亡者。`]}))(BRANCH_TUNING.st_sis),
+ icy_sis:(c=>({A:[`冰爪天才`,`烏冬絕對零度天才`,`非弱化時，每次普攻追加 ${pct(c.claw)} ATK 貓爪傷害。`,`沿用原 ★3：大招全體冰爪 130%；存活且非弱化時，全隊暴擊倍率由 1.6 升至 1.9。`],B:[`貓步軍師`,`IQ 250・完美避戰公式`,`大招使當前目標速度 -${c.slow}，持續其 ${c.turns} 次行動。`,`大招為全隊附一次貓步：下一次受到普攻或普攻貓爪傷害減少 ${pct(c.catStep)}；重複施放只刷新，不累積次數。`]}))(BRANCH_TUNING.icy_sis),
+ shijie_sis:(c=>({A:[`一槍封頂`,`克雷貝爾一槍穿雲`,`大招命中生命比例低於 ${pct(c.lowHp)} 的敵人時，傷害 +${pct(c.bonus)}。`,`沿用原 ★3：280% 穿盾傷害，擊殺返還 50 MP。`],B:[`獵殺指揮官`,`頂獵指令・集中火力`,`大招命中後標記目標，另一名隊友下次命中追加師姐 ${pct(c.mark)} ATK 傷害。`,`同一標記可由每名不同隊友各觸發 1 次；DV 聯動可觸發。師姐自己不觸發，重放刷新標記。`]}))(BRANCH_TUNING.shijie_sis),
+ stock_opp:(c=>({A:[`金融核彈`,`曼哈頓金融計畫`,`★2 只觸發一種市場效果時，牛市轟炸或割韭菜傷害 +${pct(c.singleBonus)}。`,`沿用原 ★3：牛市、割韭菜同時發動；★2 的單效果補強退場。`],B:[`風險對沖師`,`清算所・最後保證金`,`割韭菜過量自療的 ${pct(c.overflow)} 轉為自身護盾。`,`市場效果仍隨機擇一：牛市額外全隊 ${c.bullShield} 護盾；割韭菜額外將該次實際傷害 ${pct(c.reapHeal)} 治療最低血量比例友軍。`]}))(BRANCH_TUNING.stock_opp),
+ satsuki:(c=>({A:[`滿員 Center`,`神宮球場滿員 Center`,`大招為血量比例最低友軍額外加 ${c.shield} 護盾。`,`沿用原 ★3：大招全隊 150 護盾及速度 +15。`],B:[`魅惑主唱`,`Encore・只准望住我`,`大招對當前目標額外降攻 ${pct(c.extraWeaken)}，持續其 ${c.turns} 次行動。`,`大招改鎖定最高攻擊敵人，額外降攻提升至 ${pct(c.strongWeaken)}，持續其 ${c.turns} 次行動；保留基礎降攻，不獲 A 線全隊盾及加速。`]}))(BRANCH_TUNING.satsuki),
+ loki:(c=>({A:[`世界樹之神`,`故事之神・世界樹王座`,`Mobius 電擊對 MP 比例低於 ${pct(c.lowMp)} 的敵人傷害 +${pct(c.bonus)}；無魔力者不適用。`,`沿用原 ★3：Mobius 電擊 2 名敵人並各偷 10 MP。`],B:[`時間守望者`,`分歧時間線・拒絕此結局`,`大招為最低血量比例友軍加 ${c.shield} 護盾。`,`Loki 存活且可參戰時，每場首次友軍將受致命傷，取消該次剩餘生命傷害，生命最低保留至其上限 ${pct(c.saveHp)}；不充魔、不反擊。優先於破產保護。`]}))(BRANCH_TUNING.loki),
+ andy:(c=>({A:[`末日先知`,`WTI 負四十美元終審`,`完成儀式降臨後，傷害 +${pct(c.landBonus)}，持續自身 ${c.turns} 次行動；不加成當次降臨轟炸。`,`沿用原 ★3：儀式縮短為 2 次、降臨 300% 傷害及自身 300 護盾。`],B:[`深淵佈道者`,`柏克福音・末日方舟`,`每完成 1 個儀式，為場上最低血量比例友軍加 ${c.ritualShield} 護盾。`,`儀式維持 3 次；降臨額外全隊 ${c.landShield} 護盾，參戰後大招使敵全體降攻 ${pct(c.weaken)}，持續其 ${c.turns} 次行動。`]}))(BRANCH_TUNING.andy),
+ aming:(c=>({A:[`最高權限`,`Sudo 最高權限覆寫`,`技能對每名命中敵人額外削 ${c.shred} 護盾。`,`沿用原 ★3：全體攻擊、削去現有盾 50%、扣 50 MP。`],B:[`系統維護員`,`Hotfix・全隊重新上線`,`每次大招將實際扣除敵方 MP 的 ${pct(c.mpShare)} 轉給另一名 MP 比例最低友軍，每次最多 ${c.mpCap} MP。`,`維持雙目標攻擊及扣 40 MP，追加解除全隊一項減速；沿用 ★2 回魔，不獲 A 線全體削盾。`]}))(BRANCH_TUNING.aming),
+ dashen:(c=>({A:[`創世裁決`,`創世神罰・天界降臨`,`Loki 或 HUGO 存活同場時，大招傷害額外 +${pct(c.partnerBonus)}。`,`沿用原 ★3：神諭倍率再加 45 個百分點，全隊 140 護盾。`],B:[`神諭統帥`,`天命共鳴・眾神敕令`,`大招後標記一名存活敵人，另一名隊友首次命中追加大神 ${pct(c.mark2)} ATK 傷害。`,`改為每名其他存活幻神各可觸發 1 次 ${pct(c.mark3)} ATK 追擊；大神本身不觸發，不獲 A 線增傷及全隊盾。`]}))(BRANCH_TUNING.dashen),
+ hugo:(c=>({A:[`次元處刑者`,`無間次元・連環收割`,`大招對殘血目標的傷害額外 +${pct(c.bonus)}。`,`沿用原 ★3：275% 斬殺，擊殺後追加一次 150% 次元斬。`],B:[`裂隙獵人`,`事件視界・無處可逃`,`大招未擊殺時留下裂隙；目標下次受擊追加 HUGO ${pct(c.rift2)} ATK 傷害。`,`裂隙提升至 ${pct(c.rift3)} ATK；觸發後目標降攻 ${pct(c.weaken)}，持續其 ${c.turns} 次行動，並為最低血量比例友軍加 ${c.shield} 護盾；不獲 A 線追斬。`]}))(BRANCH_TUNING.hugo),
+ dvp:(c=>({A:[`鋼鐵長城`,`萬里長城永不倒`,`自身有護盾時，受到的非真實傷害 -${pct(c.reduction)}。`,`沿用原 ★3：開局 350 護盾，大招自身 400 護盾、其他友軍 150 護盾。`],B:[`反擊前鋒`,`雖遠必誅・破陣衝鋒`,`護盾被敵人打破後，對攻擊者反震 ${pct(c.reflect)} ATK，每輪最多 1 次。`,`大招施放前消耗自身現有護盾 ${pct(c.consume)}，將消耗量轉為對前排的追加傷害（上限 ${pct(c.cap)} ATK），並額外削 ${c.shred} 護盾；保留基礎自身加盾。`]}))(BRANCH_TUNING.dvp),
+ ansir:(c=>({A:[`超音速教官`,`薑越老越辣・超音速`,`攻擊速度低於自己的敵人，非真實傷害 +${pct(c.bonus)}。`,`沿用原 ★3：大招永久加速提升至 +30，追加速度差真傷。`],B:[`全隊體能班`,`年輕人・跟實我`,`大招為最慢的其他隊友加速 ${c.haste}，持續其 ${c.turns} 次行動。`,`改為全隊加速 ${c.haste3}，持續各自 ${c.turns} 次行動；另為最低血量比例友軍加 ${c.shield} 護盾。自身基礎大招仍永久加速 ${c.haste}，不獲 A 線真傷。`]}))(BRANCH_TUNING.ansir),
+ lg:(c=>({A:[`奇蹟牧師`,`大聖堂奇蹟恩典`,`大招治療的對象額外加 ${c.shield} 護盾，滿血亦生效。`,`沿用原 ★3：大招全隊治療 160 HP、120 護盾。`],B:[`審判神父`,`異端審判・破曉聖裁`,`大招命中前額外削除目標 ${c.shred} 護盾。`,`天罰提升至 ${pct(c.damage3)} ATK，額外以本次實際傷害 ${pct(c.leech)} 治療最低血量比例友軍；保留基礎單體急救，不獲 A 線群體治療。`]}))(BRANCH_TUNING.lg),
+ andy_opp_fused:(c=>({A:[`終局金融風暴`,`布雷頓森林終焉`,`全體普攻傷害 +${pct(c.basicBonus)}。`,`沿用原 ★3：開局全隊 250 護盾，大招敵全體易傷 20% 及扣 20 MP（不回補自己）。`],B:[`布雷頓森林共同體`,`共同體・最後避風港`,`大招額外治療最低血量比例友軍 ${c.heal} HP。`,`大招全隊額外 ${c.shield} 護盾及減傷 ${pct(c.reduction)}，持續各自 ${c.turns} 次行動；不獲 A 線開局盾、易傷及扣魔。`]}))(BRANCH_TUNING.andy_opp_fused),
+ baemon:(c=>({A:[`主舞應援`,`SHEESH・全場同步`,`大招自身額外速度 +${c.selfHaste}，持續自身 2 次行動。`,`大招全隊額外速度 +${c.teamHaste}，持續各自 2 次行動；延續 ★2 自身加速，取代金融覺醒。`],B:[`守護應援`,`SHEESH・安可守護圈`,`大招額外治療最低血量比例友軍 ${c.heal} HP。`,`大招全隊額外 ${c.shield} 護盾；延續 ★2 急救，取代金融覺醒。`]}))(BRANCH_TUNING.baemon)
+};
+
+const Branches = (()=>{
+ let pending=null, context=null, procDepth=0;
+ const state=u=>u.br||(u.br={turn:0,effects:[],used:{}});
+ const key=u=>u.id==='stock_opp'&&u.skillName?.includes('SHEESH')?'baemon':u.id;
+ const active=u=>!!u&&u.isAlly!==false&&u.stars>=2&&['A','B'].includes(u.branch)&&!!BRANCH_PATHS[key(u)];
+ const is=(u,id,path,star=2)=>active(u)&&key(u)===id&&u.branch===path&&u.stars>=star;
+ const legacy=u=>u.stars>=3&&!(active(u)&&u.branch==='B');
+ const tuning=u=>BRANCH_TUNING[key(u)]||{};
+ const info=(u,path=u.branch)=>BRANCH_PATHS[key(u)]?.[path];
+ const alive=team=>team.filter(u=>u.hp>0&&!u.inRitual);
+ const team=u=>u.isAlly?playerRoster:enemyRoster;
+ const low=arr=>[...alive(arr)].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
+ const log=(u,text)=>addLog(`🎭 <strong>${u.name}</strong>【${info(u)?.[u.stars>=3?1:0]||'分支'}】${text}`);
+ const shield=(a,t,n)=>{if(t&&t.hp>0)addShield(a,t,Math.round(n));};
+ const gainMp=(u,n)=>{if(u&&!u.noMpHero)u.mp=Math.min(u.maxMp,Math.max(0,(u.mp||0)+Math.round(n)));};
+ function reset(){pending=null;context=null;procDepth=0;document.getElementById('choicesGrid')?.classList.remove('branch-choices');}
+ function sync(u){
+  if(!BRANCH_PATHS[key(u)])return;
+  const t=[...HERO_POOL,FUSED_HERO_TEMPLATE].find(h=>h.id===u.id);
+  if(!u.branch){if(t){u.awakeningName=t.awakeningName;u.awakeningDesc=t.awakeningDesc;}return;}
+  const p=info(u);u.awakeningName=`★3 ${p[1]}`;u.awakeningDesc=p[3];
+ }
+ function summary(u,all=false){
+  const k=key(u);if(!BRANCH_PATHS[k])return '';
+  const paths=all||!u.branch?['A','B']:[u.branch];
+  return `<details class="branch-reading" ${u.branch?'open':''}><summary>🎭 ${u.branch?`${u.branch} 線 · ${info(u)[u.stars>=3?1:0]}`:'★2 分支 / ★3 覺醒'}</summary>${paths.map(p=>{const v=BRANCH_PATHS[k][p];return `<div class="branch-copy branch-${p}"><strong>${p} · ${v[0]}</strong><p>★2：${v[2]}</p><p>★3【${v[1]}】：${v[3]}</p></div>`;}).join('')}</details>`;
+ }
+ function showChoice(u,done,{upgrade=false,label='',confirm=false}={}){
+  if(pending)return false;
+  const token={u,done};pending=token;const o=document.getElementById('modalOverlay');
+  document.getElementById('draftModalContent').classList.remove('hidden');o.classList.remove('hidden');o.style.background='rgba(0,0,0,.9)';
+  document.getElementById('modalTitle').innerText=confirm?'★3 人格完全覺醒':upgrade?'★2 面具初醒 · 選擇你的道路':'☯️ 合體人格 · 選擇獨立路線';
+  document.getElementById('modalSub').innerText=confirm?'沿用 ★2 所選路線，完成後不疊加另一條路線。':'A／B 二選一；★3 沿此路線覺醒。可先查看棋盤或展開能力閱讀。';
+  const grid=document.getElementById('choicesGrid');grid.innerHTML='';grid.classList.add('branch-choices');
+  const paths=confirm?[u.branch]:['A','B'];
+  paths.forEach(p=>{const v=info(u,p),card=document.createElement('div');card.className=`choice-card branch-choice branch-${p}`;
+   GameArt.decorate(card,u);card.innerHTML=`${GameArt.hero(u)}<div class="branch-kicker">PERSONA ${p} / ${confirm?'AWAKEN':'CHOOSE YOUR PATH'}</div><h4>${confirm?v[1]:v[0]}</h4><div class="choice-desc"><p><b>★2 面具初醒</b><br>${GameText.format(v[2])}</p><p><b>★3 人格完全覺醒</b><br>${GameText.format(v[3])}</p></div><button class="branch-select" type="button">${confirm?'完成覺醒':`選擇 ${p} 線 · ${v[0]}`}</button>`;
+   card.querySelector('.branch-select').onclick=()=>{if(pending!==token)return;const task=pending;pending=null;grid.classList.remove('branch-choices');u.branch=p;sync(u);if(upgrade)completeUnitStarUpgrade(u,label);log(u,upgrade?'升星完成。':'合體路線已確立，原角色分支不再保留。');task.done?.();};grid.appendChild(card);
+  });SceneFX.draft('recruit-reward',currentStage);grid.querySelector('.branch-select')?.focus();return true;
+ }
+ function upgrade(u,label,done=()=>{}){
+  if(pending||u.stars>=3)return;
+  if(!BRANCH_PATHS[key(u)]){completeUnitStarUpgrade(u,label);done();return;}
+  if(u.branch&&u.stars===1){completeUnitStarUpgrade(u,label);done();return;}
+  showChoice(u,done,{upgrade:true,label,confirm:!!u.branch&&u.stars===2});
+ }
+ function prep(){
+  for(const u of playerRoster){u.br={turn:0,effects:[],used:{}};sync(u);}
+  for(const u of playerRoster){
+   if(is(u,'dv','B')){state(u).protect=alive(playerRoster).find(a=>a.id==='shijie_sis'&&a!==u)||alive(playerRoster).filter(a=>a!==u).sort((a,b)=>a.maxHp-b.maxHp)[0];}
+  }
+ }
+ function allowDebuff(u,type){
+  if(u.immuneDebuff)return false;
+  if(state(u).ward){state(u).ward--;queueVisualEffect(u,'shield','🍵 清心免疫');return false;}return true;
+ }
+ function temp(u,id,stat,value,turns,source){
+  if(!u||u.hp<=0)return;
+  if(value<0&&!allowDebuff(u,stat))return;
+  const s=state(u),prev=s.effects.find(e=>e.id===id);
+  if(prev){if(stat==='spd')u.curSpd-=prev.value;else if(stat==='atk')u.atk=Math.round(u.atk/(1+prev.value));s.effects=s.effects.filter(e=>e!==prev);}
+  const e={id,stat,value,until:s.turn+turns,source};s.effects.push(e);
+  if(stat==='spd')u.curSpd=(u.curSpd||u.spd)+value;
+  if(stat==='atk')u.atk=Math.max(1,Math.round(u.atk*(1+value)));
+ }
+ function turnStart(u){const s=state(u);s.turn++;s.effects=s.effects.filter(e=>{if(s.turn<=e.until)return true;if(e.stat==='spd')u.curSpd-=e.value;else if(e.stat==='atk')u.atk=Math.round(u.atk/(1+e.value));return false;});}
+ function cleanse(u,type){
+  const s=state(u),e=s.effects.find(e=>e.value<0&&(!type||e.stat===type));
+  if(e){if(e.stat==='spd')u.curSpd-=e.value;else if(e.stat==='atk')u.atk=Math.round(u.atk/(1+e.value));s.effects=s.effects.filter(x=>x!==e);return true;}
+  if((!type||type==='spd')&&(u.spdDebuffTurns||u.freetedSlowTurns||(u.curSpd||u.spd)<(u.initialBattleSpd||u.spd))){u.curSpd=Math.max(u.curSpd||u.spd,(u.initialBattleSpd||u.spd)+speedBonus(u));u.spdDebuffTurns=0;u.freetedSlowTurns=0;return true;}
+  if((!type||type==='atk')&&!u.isWeakened&&u.atk<(u.initialBattleAtk||u.baseAtk)){u.atk=u.initialBattleAtk||u.baseAtk;return true;}return false;
+ }
+ function speedBonus(u){return state(u).effects.filter(e=>e.stat==='spd').reduce((n,e)=>n+e.value,0);}
+ function reduction(u){return Math.max(0,...state(u).effects.filter(e=>e.stat==='reduce').map(e=>e.value));}
+ function mark(owner,target,kind,mult,multi=false){if(!target||target.hp<=0)return;state(target).marks=state(target).marks||{};state(target).marks[kind]={owner,mult,multi,used:new Set()};queueVisualEffect(target,'hit',kind==='rift'?'🌌 裂隙':'🎯 標記');}
+ function beforeSkill(a,allies,opps,t){
+  const ctx={actor:a,kind:'skill',actual:0,primary:t};context=ctx;
+  if(!active(a))return ctx;
+  const k=key(a),c=tuning(a);
+  if(is(a,'satsuki','B',3)){ctx.primary=alive(opps).sort((x,y)=>y.atk-x.atk)[0]||t;}
+  if(is(a,'dvp','B',3)){ctx.spent=Math.min(Math.floor((a.shield||0)*c.consume),a.atk*c.cap);a.shield=Math.max(0,(a.shield||0)-Math.floor((a.shield||0)*c.consume));}
+  if(is(a,'stock_opp','A')&&a.stars===2){ctx.marketSingle=true;}
+  if(is(a,'aming','B'))ctx.mpBefore=alive(opps).slice(0,2).reduce((n,x)=>n+(x.noMpHero?0:x.mp||0),0);
+  if(is(a,'lg','B'))ctx.shred=c.shred;
+  if(is(a,'aming','A'))alive(opps).slice(0,legacy(a)?opps.length:2).forEach(e=>e.shield=Math.max(0,(e.shield||0)-c.shred));
+  if(ctx.shred&&ctx.primary)ctx.primary.shield=Math.max(0,(ctx.primary.shield||0)-ctx.shred);
+  return ctx;
+ }
+ function afterSkill(a,allies,opps,t,ctx){
+  if(!active(a)||a.hp<=0)return;const c=tuning(a),k=key(a),friends=alive(allies),foes=alive(opps),p=a.branch;
+  const healLow=n=>{const u=low(allies);if(u)recordHeal(a,u,n);};const shieldLow=n=>shield(a,low(allies),n);
+  if(k==='dc_tesla'){if(p==='A')temp(a,'dc-haste','spd',c.haste,c.turns,a);else if(a.stars>=3){friends.sort((x,y)=>x.hp/x.maxHp-y.hp/y.maxHp).slice(0,2).forEach(u=>{shield(a,u,c.shield3);temp(u,'dc-rescue','reduce',c.reduction,c.turns,a);});}else shieldLow(c.shield2);}
+  if(k==='dv'&&p==='B'){const u=state(a).protect;shield(a,u,u?.maxHp*c.shield||0);if(a.stars>=3)shield(a,a,a.maxHp*c.shield);}
+  if(k==='mouse_sis'&&p==='B'){healLow(c.extraHeal);if(a.stars>=3)friends.forEach(u=>{cleanse(u);state(u).ward=c.ward;});}
+  if(k==='icy_sis'&&p==='B'){temp(t,'icy-slow','spd',-c.slow,c.turns,a);if(a.stars>=3)friends.forEach(u=>state(u).catStep=c.catStep);}
+  if(k==='stock_opp'&&p==='B'&&a.stars>=3){if(ctx.bull)friends.forEach(u=>shield(a,u,c.bullShield));if(ctx.reapActual)healLow(ctx.reapActual*c.reapHeal);}
+  if(k==='satsuki'){if(p==='A')shieldLow(c.shield);else temp(t,'idol-charm','atk',-(a.stars>=3?c.strongWeaken:c.extraWeaken),c.turns,a);}
+  if(k==='loki'&&p==='B')shieldLow(c.shield);
+  if(k==='andy'&&p==='B'&&a.stars>=3)foes.forEach(u=>temp(u,'andy-fear','atk',-c.weaken,c.turns,a));
+  if(k==='aming'&&p==='B'){const n=Math.min(c.mpCap,(ctx.mpDrained||0)*c.mpShare);const u=friends.filter(x=>x!==a&&!x.noMpHero).sort((x,y)=>x.mp/x.maxMp-y.mp/y.maxMp)[0];gainMp(u,n);if(a.stars>=3)friends.forEach(u=>cleanse(u,'spd'));}
+  if(k==='dashen'&&p==='B')mark(a,foes[0],'oracle',a.stars>=3?c.mark3:c.mark2,a.stars>=3);
+  if(k==='hugo'&&p==='B'&&ctx.primary?.hp>0)mark(a,ctx.primary,'rift',a.stars>=3?c.rift3:c.rift2);
+  if(k==='dvp'&&p==='B'&&a.stars>=3&&t?.hp>0){t.shield=Math.max(0,(t.shield||0)-c.shred);if(ctx.spent)dealDamage(a,t,ctx.spent);}
+  if(k==='ansir'&&p==='B'){if(a.stars>=3){friends.forEach(u=>temp(u,'coach-haste','spd',c.haste3,c.turns,a));shieldLow(c.shield);}else{const u=friends.filter(x=>x!==a).sort((x,y)=>x.curSpd-y.curSpd)[0];if(u)temp(u,'coach-haste','spd',c.haste,c.turns,a);}}
+  if(k==='lg'&&p==='B'&&a.stars>=3)healLow(ctx.actual*c.leech);
+  if(k==='andy_opp_fused'&&p==='B'){healLow(c.heal);if(a.stars>=3)friends.forEach(u=>{shield(a,u,c.shield);temp(u,'fused-cover','reduce',c.reduction,c.turns,a);});}
+  if(k==='baemon'){if(p==='A'){temp(a,'baemon-self','spd',c.selfHaste,2,a);if(a.stars>=3)friends.forEach(u=>temp(u,'baemon-team','spd',c.teamHaste,2,a));}else{healLow(c.heal);if(a.stars>=3)friends.forEach(u=>shield(a,u,c.shield));}}
+  log(a,'分支效果發動。');
+ }
+ function adjustDamage(a,t,n,isTrue){
+  if(!isTrue&&active(a)){
+   const c=tuning(a),kind=context?.actor===a?context.kind:'';
+   if(is(a,'dv','A')&&kind==='skill'&&a.hp/a.maxHp<c.lowHp)n*=1+c.bonus;
+   if(is(a,'shijie_sis','A')&&kind==='skill'&&t.hp/t.maxHp<c.lowHp)n*=1+c.bonus;
+   if(is(a,'stock_opp','A')&&context?.marketSingle)n*=1+c.singleBonus;
+   if(is(a,'loki','A')&&kind==='mobius'&&!t.noMpHero&&t.mp/t.maxMp<c.lowMp)n*=1+c.bonus;
+   if(is(a,'dashen','A')&&kind==='skill'&&alive(team(a)).some(u=>['loki','hugo'].includes(u.id)))n*=1+c.partnerBonus;
+   if(is(a,'hugo','A')&&kind==='skill')n*=1+c.bonus;
+   if(is(a,'ansir','A')&&(a.curSpd||a.spd)>(t.curSpd||t.spd))n*=1+c.bonus;
+   if(is(a,'andy_opp_fused','A')&&kind==='basic')n*=1+c.basicBonus;
+   const boost=state(a).effects.filter(e=>e.stat==='damage').reduce((v,e)=>v+e.value,0);n*=1+boost;
+   if(is(a,'lg','B',3)&&kind==='skill')n*=c.damage3/1.65;
+  }
+  if(!isTrue){if(is(t,'dvp','A')&&(t.shield||0)>0)n*=1-tuning(t).reduction;n*=1-reduction(t);if(context?.kind==='basic'&&state(t).catStep){n*=1-state(t).catStep;state(t).catStep=0;queueVisualEffect(t,'shield','🐾 貓步');}}
+  return n;
+ }
+ function preventLethal(t,dmg){
+  if(t.hp-dmg>0)return false;const savior=alive(team(t)).find(u=>is(u,'loki','B',3)&&!state(u).used.save);
+  if(!savior)return false;state(savior).used.save=true;t.hp=Math.max(t.hp,Math.round(t.maxHp*tuning(savior).saveHp));t.ghostHp=t.hp;
+  log(savior,`改寫 ${t.name} 的致命時間線。`);queueVisualEffect(t,'heal','🦊 時間線改寫');return true;
+ }
+ function afterDamage(a,t,before,actual){
+  if(context?.actor===a&&context.kind==='skill'&&context.primary===t){context.actual+=actual;if(context.reaping)context.reapActual=(context.reapActual||0)+actual;}
+  if(procDepth||!actual)return;
+  procDepth++;
+  try{
+   if(t.hp>0){
+    const st=alive(team(t)).find(u=>is(u,'st_sis','B')&&!state(u).used.emergency&&t.hp/t.maxHp<=tuning(u).emergencyHp);
+    if(st){state(st).used.emergency=true;const c=tuning(st);shield(st,t,c.shield);if(st.stars>=3){recordHeal(st,t,c.heal);temp(t,'st-emergency','reduce',c.reduction,c.turns,st);}log(st,`急救 ${t.name}，本場次數已用。`);}
+    for(const owner of alive(team(t)))if(is(owner,'dv','B',3)&&state(owner).protect===t&&a?.hp>0&&a.isAlly!==t.isAlly&&state(owner).used.counter!==currentRoundNumber){state(owner).used.counter=currentRoundNumber;dealDamage(owner,a,owner.atk*tuning(owner).counter);log(owner,'父愛反擊。');}
+   }
+   if(is(t,'dvp','B')&&before.shield>0&&(t.shield||0)===0&&t.hp>0&&a?.hp>0&&a.isAlly!==t.isAlly&&state(t).used.reflect!==currentRoundNumber){state(t).used.reflect=currentRoundNumber;dealDamage(t,a,t.atk*tuning(t).reflect);log(t,'破盾反震。');}
+   if(a?.hp>0&&t.hp>0&&a.isAlly!==t.isAlly){
+    for(const [kind,m] of Object.entries(state(t).marks||{})){
+     if(m.owner.hp<=0||m.owner.isAlly!==a.isAlly||m.used.has(a)||kind!=='rift'&&m.owner===a)continue;
+     if(kind==='oracle'&&m.multi&&!['loki','hugo'].includes(a.id))continue;
+     m.used.add(a);if(!m.multi)delete state(t).marks[kind];
+     dealDamage(m.owner,t,m.owner.atk*m.mult);
+     if(kind==='rift'&&m.owner.stars>=3){const c=tuning(m.owner);if(t.hp>0)temp(t,'rift-weaken','atk',-c.weaken,c.turns,m.owner);shield(m.owner,low(team(m.owner)),c.shield);}
+     log(m.owner,`${kind==='rift'?'裂隙':'標記'}追擊。`);
+    }
+   }
+  }finally{procDepth--;}
+ }
+ function afterHeal(h,t,requested,before){
+  if(!h||!active(h))return;const c=tuning(h);
+  if(is(h,'stock_opp','B')&&context?.actor===h&&context.reaping&&t===h){const overflow=Math.max(0,requested-(t.hp-before));shield(h,h,overflow*c.overflow);}
+  if(is(h,'lg','A')&&context?.actor===h&&context.kind==='skill')shield(h,t,c.shield);
+ }
+ function demon(u){if(is(u,'freeted','B'))shield(u,u,u.maxHp*tuning(u).demonShield);}
+ function revive(owner,u){if(is(owner,'freeted','B',3)){shield(owner,u,u.maxHp*tuning(owner).reviveShield);temp(u,'revive-cover','reduce',tuning(owner).reduction,tuning(owner).turns,owner);}}
+ function ritual(u,land=false){if(!active(u))return;const c=tuning(u);if(u.branch==='B'){if(land&&u.stars>=3)alive(team(u)).forEach(t=>shield(u,t,c.landShield));else if(!land)shield(u,low(team(u)),c.ritualShield);}else if(land)temp(u,'andy-arrival','damage',c.landBonus,c.turns,u);}
+ function withKind(a,kind,fn){const old=context;context={actor:a,kind};try{return fn();}finally{context=old;}}
+ function install(){
+  const originalDamage=dealDamage;dealDamage=function(a,t,n,tr=false,ignore=false,transferred=false){if(!t||t.hp<=0)return 0;const b={hp:t.hp,shield:t.shield||0};const result=originalDamage(a,t,adjustDamage(a,t,n,tr),tr,ignore,transferred);const actual=Math.max(0,b.hp-t.hp)+Math.max(0,b.shield-(t.shield||0));afterDamage(a,t,b,actual);return result;};
+  const originalHeal=recordHeal;recordHeal=function(h,t,n){const before=t.hp;if(is(h,'st_sis','A')&&t.hp/t.maxHp<tuning(h).lowHp)n*=1+tuning(h).healBonus;originalHeal(h,t,n);if(before>0)afterHeal(h,t,Math.round(n),before);};
+  const originalSkill=castSkill;castSkill=function(a,allies,opps,t){const old=context,ctx=beforeSkill(a,allies,opps,t);try{originalSkill(a,allies,opps,ctx.primary);afterSkill(a,allies,opps,ctx.primary,ctx);}finally{context=old;}};
+ }
+ function market(type){if(context)context[type]=true;}
+ function marketDrain(n){if(context)context.mpDrained=(context.mpDrained||0)+n;}
+ function primary(t){if(context)context.primary=t;}
+ function hunt(a,t){mark(a,t,'hunt',tuning(a).mark,a.stars>=3);}
+ function reaping(fn){if(!context)return fn();const old=context.reaping;context.reaping=true;try{return fn();}finally{context.reaping=old;}}
+ function overflow(a,t,amount){if(is(a,'mouse_sis','A'))shield(a,t,Math.max(0,(t.mp||0)+amount-t.maxMp)*tuning(a).overflow);}
+ return {reset,state,key,active,is,legacy,info,summary,sync,upgrade,showChoice,prep,allowDebuff,temp,speedBonus,turnStart,withKind,install,market,marketDrain,primary,hunt,reaping,overflow,preventLethal,demon,revive,ritual,tuning,get pending(){return pending;}};
+})();
+function upgradeUnitStar(unit,label='招募升星',done=()=>{}){Branches.upgrade(unit,label,done);}
+function showUnitSkillTooltip(e,isAlly,idx){clearTimeout(tooltipHideTimer);const u=(isAlly?playerRoster:enemyRoster)[idx];if(!u)return;tooltipEl.innerHTML=`<div class="tt-title">${GameText.escape(u.name)} · ${GameText.escape(u.skillName)}</div>${GameText.hero(u)}`;tooltipEl.style.display='block';moveTooltip(e);}
+
+</script>
+<script>
 /* DC BON 文字設計系統。資料與戰鬥計算留在 data.js / engine.js。
  * 型別：damage / heal / mana / buff / condition / danger / neutral
  * 摘要由人工閱讀原文後整理；完整文字從原始資料讀取，不改寫數值。
@@ -1728,6 +1958,7 @@ const GameText = (() => {
     const key = h.id === 'stock_opp' && h.skillName?.includes('SHEESH') ? 'baemon' : h.id;
     const known=sourceMatches('skills',key,h.skillDesc);
     const main=description(known && skills[key] || [['neutral','技能原文',h.skillDesc]],h.skillDesc,h.skillName);
+    if (BRANCH_PATHS[Branches.key(h)]) return `<div class="rule-difference">${h.branch?'顯示基礎技能；實際強化／替代效果見所選分支。':'★2 選 A／B；★3 沿所選路線覺醒。A／B 不疊加。'}</div>`+main+Branches.summary(h)+(known&&!(h.branch==='B'&&['satsuki','icy_sis','dc_tesla','andy_opp_fused'].includes(key))?(h.branch==='B'&&key==='dashen'?'<div class="rule-difference">◇ 伙伴聯動沿現版採 170% 基礎倍率；B 線不加入 A 線 ★3 的 45 個百分點。</div>':note(key)):'');
     const awake=h.awakeningDesc?`<details class="awakening-box"><summary>⚡ ${escape(h.awakeningName)}${h.stars>=3?' · 已解鎖':' · ★3 解鎖'}</summary>${description(sourceMatches('awakenings',h.id,h.awakeningDesc)&&awakenings[h.id]||[['neutral','覺醒原文',h.awakeningDesc]],h.awakeningDesc)}</details>`:'';
     return (h.stars>=3?'<div class="rule-difference">★3 已覺醒：下列為基礎技能，請展開覺醒效果查看強化。</div>':'')+main+awake+(known?note(key):'');
   }
@@ -1932,7 +2163,8 @@ const P5FX = (() => {
   }
   const car=`<svg viewBox="0 0 640 230" aria-hidden="true"><path d="M36 128L110 111 198 36Q220 23 252 25L430 33 517 110 593 136 623 185 16 185Z" fill="#ed001b" stroke="#fff6df" stroke-width="8"/><path d="M153 109L222 45 281 45 282 106Z M301 45L418 52 481 108 301 106Z" fill="#09090b" stroke="#fff6df" stroke-width="4"/><path d="M27 156L123 153 M524 153L600 161 M199 132L486 134" stroke="#fff6df" stroke-width="7"/><circle cx="143" cy="185" r="41" fill="#09090b" stroke="#fff6df" stroke-width="10"/><circle cx="500" cy="185" r="41" fill="#09090b" stroke="#fff6df" stroke-width="10"/><path d="M143 159V211 M117 185H169 M500 159V211 M474 185H526" stroke="#ed001b" stroke-width="7"/></svg>`;
   function tesla(actor,isDouble,isStar3) {
-    cutIn(actor.icon,actor.name,`${isDouble?'360% 雙倍暴衝':'180% 全自動暴衝'}${isStar3?' · ★3 綁隊友追加 150%':''}`,isStar3?'awakening':'ult');
+    const route=Branches.active(actor)?` · ${Branches.info(actor)[actor.stars>=3?1:0]}`:'';
+    cutIn(actor.icon,actor.name,`${isDouble?'360% 雙倍暴衝':'180% 全自動暴衝'}${isStar3?' · ★3 綁隊友追加 150%':''}${route}`,actor.stars>=3?'awakening':'ult');
     const layer=document.getElementById('p5ArenaFX');if(!layer||GameReading.reduced())return;
     clearTimeout(roadTimer);layer.innerHTML=`<div class="tesla-road ${actor.isAlly?'road-ally':'road-enemy'}"><div class="road-stripes"></div><div class="tesla-car">${car}<span class="tesla-exhaust"></span></div><div class="tesla-impact">${isDouble?'DOUBLE!':'BOOM!'}</div></div>`;
     layer.dataset.effect='tesla';
@@ -2014,6 +2246,7 @@ function triggerCutIn(icon, name, subTitle, styleType = 'ult') {
 // ================= 3. 初始化、命數顯示與流程控制 =================
 function initGame() {
   currentStage = 1;
+  Branches.reset();
   P5FX.clear();
   visualEvents.clear();
   visualQueue = [];
@@ -2032,11 +2265,11 @@ function initGame() {
   if (reportModal) reportModal.classList.add('hidden');
 
   document.getElementById('battleLog').innerHTML =
-    '<div class="log-entry">🎩 歡迎來到 <strong>《DC BON 全明星自動戰棋》V4【硬核深淵：命數與極意】</strong>！本版本導入 <strong>P5 怪盜戰鬥視覺</strong>、<span class="tag-buff">🛡️ 護盾系統</span>、<span class="tag-crit">★3 專屬覺醒極意</span> 與 <strong>❤️×2 心心命數制</strong>！</div>';
+    '<div class="log-entry">🎩 歡迎來到 <strong>《DC BON 全明星自動戰棋》V4【硬核深淵：命數與極意】</strong>！本版本導入 <strong>P5 怪盜戰鬥視覺</strong>、<span class="tag-buff">🛡️ 護盾系統</span>、<span class="tag-crit">★2 分支／★3 路線覺醒</span> 與 <strong>❤️×2 心心命數制</strong>！</div>';
 
   generateEnemyTeam(currentStage);
   updateUI();
-  showHeroDraft('選擇你的初始英雄 (第 1 / 8 關)', '挑選 1 位 Discord 成員作為開局隊長 (Andy安迪將於第 2 關後解鎖；滿 ★3 英雄將解鎖覺醒極意並移出卡池)');
+  showHeroDraft('選擇你的初始英雄 (第 1 / 8 關)', '挑選 1 位 Discord 成員作為開局隊長 (Andy安迪將於第 2 關後解鎖；★2 選 A／B 分支，★3 沿路線覺醒並移出卡池)');
 }
 
 function resetGame() {
@@ -2083,6 +2316,7 @@ function syncBaemonTransformation() {
         u.skillDesc = '投下金融核彈！隨機觸發【牛市暴漲】(全隊攻擊+25% 並轟炸敵方全體) 或【割韭菜】(吸取敵方最高血量者 165% 傷害轉為自身生命)。';
       }
     }
+    Branches.sync(u);
   });
 }
 
@@ -2116,7 +2350,7 @@ function updateDraftOverview() {
     synEl.innerHTML = '<span style="color:var(--text-muted)">無</span>';
   } else {
     teamEl.innerHTML = playerRoster.map((u, i) =>
-      `<span class="mini-unit-pill ${u.stars >= 3 ? 'max-star-pill' : ''}">${i === 0 ? '🛡️' : ''}${u.icon} ${u.name} ★${u.stars}${u.stars >= 3 ? '【極意】' : ''}</span>`
+      `<span class="mini-unit-pill ${u.stars >= 3 ? 'max-star-pill' : ''}">${i === 0 ? '🛡️' : ''}${u.icon} ${u.name} ★${u.stars}${u.stars >= 3 ? '【極意】' : ''}${u.branch?' · '+u.branch+'線':''}</span>`
     ).join('');
     const syn = getActiveSynergies(playerRoster);
     synEl.innerHTML = Object.entries(syn).map(([k, v]) =>
@@ -2170,7 +2404,7 @@ function showHeroDraft(title, subtitle) {
           ${hero.traits.map(t => `<span class="trait-pill" onmouseenter="showTraitTooltip(event, '${t}')" onmouseleave="scheduleTooltipHide()">${t}</span>`).join('')}
         </div>
         <div class="choice-desc">
-          ${GameText.hero(hero)}
+          ${GameText.hero(existing||hero)}
           ${hero.easterEggHint ? renderEasterHint(hero.easterEggHint) : ''}
         </div>
       </div>
@@ -2184,7 +2418,7 @@ function showHeroDraft(title, subtitle) {
   SceneFX.draft(currentStage === 1 && playerRoster.length === 0 ? 'recruit-start' : 'recruit-reward', currentStage);
 }
 
-function upgradeUnitStar(unit, sourceLabel = '招募升星') {
+function completeUnitStarUpgrade(unit, sourceLabel = '招募升星') {
   if (unit.stars >= MAX_STARS) return;
   unit.stars += 1;
   unit.baseHp = Math.round(unit.baseHp * 1.35);
@@ -2200,10 +2434,10 @@ function upgradeUnitStar(unit, sourceLabel = '招募升星') {
 }
 
 function selectHero(heroTemplate) {
+  if (Branches.pending) return;
   const existing = playerRoster.find(h => h.id === heroTemplate.id);
   if (existing) {
-    upgradeUnitStar(existing, '招募合成');
-    proceedAfterHeroSelection();
+    upgradeUnitStar(existing, '招募合成', proceedAfterHeroSelection);
   } else if (playerRoster.length < 4) {
     playerRoster.push({
       ...heroTemplate,
@@ -2345,7 +2579,7 @@ function showLettuceUpgradeModal() {
         </h4>
         <div class="choice-desc">
           ${nextStar === 3
-            ? `<strong style="color:#fde047;">🔥 升上 ★3 終極星級！立即解鎖：${ally.awakeningName || '專屬極意'}</strong><br>${ally.awakeningDesc || ''}`
+            ? `<strong style="color:#fde047;">🔥 升上 ★3 終極星級！立即解鎖：${ally.awakeningName || '專屬極意'}</strong><br>${ally.awakeningDesc || ''}${Branches.summary(ally)}`
             : `基礎生命值提升至 <strong>${Math.round(ally.baseHp * 1.35)}</strong>，基礎攻擊力提升至 <strong>${Math.round(ally.baseAtk * 1.35)}</strong>！`}
         </div>
       </div>
@@ -2353,8 +2587,7 @@ function showLettuceUpgradeModal() {
     `;
     card.onclick = (event) => {
       if (isReadingClick(event)) return;
-      upgradeUnitStar(ally, '🥬大力生菜');
-      finishAugmentStep();
+      upgradeUnitStar(ally, '🥬大力生菜', finishAugmentStep);
     };
     grid.appendChild(card);
   });
@@ -2505,6 +2738,7 @@ function generateEnemyTeam(stage) {
 // 戰敗扣 1 命後重置當關敵方滿血與護盾
 function resetCurrentEnemyStage() {
   enemyRoster.forEach(e => {
+    e.br = {turn:0,effects:[],used:{}};
     e.hp = e.maxHp;
     e.ghostHp = e.maxHp;
     if (e.id === 'boss_yeung') {
@@ -2545,8 +2779,8 @@ function prepareUnitsForStage() {
   syncBaemonTransformation();
   const syn = getActiveSynergies(playerRoster);
   const hasAug = (id) => playerAugments.some(a => a.id === id);
-  const hasAwakenedDcTesla = playerRoster.some(u => u.id === 'dc_tesla' && u.stars >= 3);
-  const hasAwakenedFused = playerRoster.some(u => u.id === 'andy_opp_fused' && u.stars >= 3);
+  const hasAwakenedDcTesla = playerRoster.some(u => u.id === 'dc_tesla' && Branches.legacy(u));
+  const hasAwakenedFused = playerRoster.some(u => u.id === 'andy_opp_fused' && Branches.legacy(u));
 
   playerRoster.forEach((u, idx) => {
     let maxHp = u.baseHp;
@@ -2586,7 +2820,7 @@ function prepareUnitsForStage() {
     if (u.id === 'icy_sis') atk = Math.round(atk * 1.25);
 
     // FreeTed ★3 覺醒【父親的腳毛】：SPD 提升 25%
-    if (u.id === 'freeted' && u.stars >= 3) {
+    if (u.id === 'freeted' && Branches.legacy(u)) {
       spd = Math.round(spd * 1.25);
     }
     // DC齊發達 ★3 覺醒【極限雙重人格・全速走數】：全隊 +35% 攻
@@ -2594,7 +2828,7 @@ function prepareUnitsForStage() {
       atk = Math.round(atk * 1.35);
     }
     // DVP ★3 覺醒：開局 350 護盾
-    if (u.id === 'dvp' && u.stars >= 3) {
+    if (u.id === 'dvp' && Branches.legacy(u)) {
       startShield += 350;
     }
     // 合體卡 ★3 覺醒：全隊 250 護盾
@@ -2648,14 +2882,15 @@ function prepareUnitsForStage() {
     u.isDemonized = false;
     u.immuneDebuff = false;
     u.basicAtkCount = 0;
-    u.dcMode = (u.id === 'dc_tesla' && u.stars >= 3) ? 'BOTH' : null;
-    u.dcCritBonus = (u.id === 'dc_tesla' && u.stars >= 3) ? 0.25 : 0;
+    u.dcMode = (u.id === 'dc_tesla' && Branches.legacy(u)) ? 'BOTH' : null;
+    u.dcCritBonus = (u.id === 'dc_tesla' && Branches.legacy(u)) ? 0.25 : 0;
     u.bDogTransferActive = false;
     u.hadTeammatesAtStart = playerRoster.length > 1;
     u.initialBattleAtk = atk;
     u.initialBattleSpd = spd;
     u.stats = { dmgDealt: 0, dmgTaken: 0, healed: 0 };
   });
+  Branches.prep();
 }
 
 function updateDualHealthState(unit) {
@@ -2852,6 +3087,7 @@ function renderTeamGrid(containerId, roster, isAlly) {
     const card = document.createElement('div');
     if (u.hp > 0 && u.hp / u.maxHp < .3) cardCls += ' hp-low';
     if (u.hp > 0 && !u.noMpHero && u.mp >= u.maxMp && !u.inRitual) cardCls += ' mp-ready';
+    if (Branches.active(u)) cardCls += ` branch-${u.branch}`;
     card.className = cardCls;
     GameArt.decorate(card,u);
     card.dataset.heroId=u.id;
@@ -2861,14 +3097,14 @@ function renderTeamGrid(containerId, roster, isAlly) {
     let statusTooltip = idx === 0 ? '位於 1 號位，優先承受單體攻擊，也是觸發【宿敵彩蛋】的叫陣位！' : '位於後排受到前排保護。';
 
     if (u.inRitual) {
-      const reqRitual = u.stars >= 3 ? 2 : 3;
+      const reqRitual = Branches.legacy(u) ? 2 : 3;
       statusTag = `🔮 儀式 (${u.ritualCount}/${reqRitual})`;
       statusTooltip = `正在場外進行末日儀式，友軍每放 1 次大招 +1 儀式，滿 ${reqRitual} 次攜帶隕石降臨！`;
     } else if (u.isDemonized) {
       statusTag = `👹 全面鬼化 (減傷50%/免控)`;
       statusTooltip = `【在座各位都係垃圾】全面鬼化中！常駐減傷 50%、免疫降攻減速，每擊殺 1 人隨機復活 1 名隊友至 25% HP！`;
     } else if (u.id === 'dc_tesla') {
-      if (u.stars >= 3) {
+      if (Branches.legacy(u)) {
         statusTag = `🚗 B記+B狗雙常駐`;
       } else if (u.dcMode === 'B_KEE') {
         statusTag = `🟢 B記形態 (全隊加攻)`;
@@ -2906,6 +3142,7 @@ function renderTeamGrid(containerId, roster, isAlly) {
           <div class="unit-name">
             <span>${u.icon} ${u.name}</span>
             <span class="stars">${'★'.repeat(u.stars)}</span>
+            ${Branches.active(u)?`<span class="branch-badge">${u.branch} · ${Branches.info(u)[u.stars>=3?1:0]}</span>`:''}
             ${u.stars >= 3 ? '<span class="p5-awake-badge">極意</span>' : ''}
           </div>
           <span class="pos-tag" onmouseenter="showTooltip(event, '📌 狀態與位置說明', '${statusTooltip}')" onmouseleave="scheduleTooltipHide()">${statusTag}</span>
@@ -2926,11 +3163,11 @@ function renderTeamGrid(containerId, roster, isAlly) {
             </div>
           </div>
 
-          <div class="bar-wrap mp-bar-wrap" onmouseenter="showTooltip(event, '💧 魔力值 / 特殊資源', '${u.noMpHero ? '無魔力英雄 (MaxMP=0)：每 5 下普攻(★3為3下)觸發擴散閃電；隊友全滅時觸發全面鬼化！' : (u.lockedMaxMp ? 'MP上限鎖定減半為 45 MP！受擊 35% 機率免傷並偷取 15 MP。' : '普攻 +30 MP、受擊 +15 MP。集滿時下次行動自動施放大招！')}')" onmouseleave="scheduleTooltipHide()">
+          <div class="bar-wrap mp-bar-wrap" onmouseenter="showTooltip(event, '💧 魔力值 / 特殊資源', '${u.noMpHero ? '無魔力英雄 (MaxMP=0)：每 ' + (Branches.legacy(u)?3:5) + ' 下普攻觸發擴散閃電；隊友全滅時觸發全面鬼化！' : (u.lockedMaxMp ? 'MP上限鎖定減半為 45 MP！受擊 35% 機率免傷並偷取 15 MP。' : '普攻 +30 MP、受擊 +15 MP。集滿時下次行動自動施放大招！')}')" onmouseleave="scheduleTooltipHide()">
             <div class="mp-fill ${u.noMpHero ? 'no-mp-fill' : ''}" style="width:${mpPct}%"></div>
             <div class="bar-text">
               ${u.noMpHero
-                ? `⚡ 閃電計數 (${u.basicAtkCount || 0}/${u.stars >= 3 ? 3 : 5}) ${u.isDemonized ? '| 👹鬼化常駐' : ''}`
+                ? `⚡ 閃電計數 (${u.basicAtkCount || 0}/${Branches.legacy(u) ? 3 : 5}) ${u.isDemonized ? '| 👹鬼化常駐' : ''}`
                 : `💧 MP ${u.mp} / ${u.maxMp}${u.lockedMaxMp ? ' (鎖定減半)' : ''}`}
             </div>
           </div>
@@ -2941,7 +3178,7 @@ function renderTeamGrid(containerId, roster, isAlly) {
             ${u.traits.map(t => `<span class="mini-trait" onmouseenter="showTraitTooltip(event, '${t}')" onmouseleave="scheduleTooltipHide()">${t}</span>`).join(' ')}
           </span>
         </div>
-        <div class="unit-skill-tag" onmouseenter="showTooltip(event, '💥 技能：【${u.skillName}】', '${safeSkillDesc}', '${safeLore}')" onmouseleave="scheduleTooltipHide()">
+        <div class="unit-skill-tag" onmouseenter="showUnitSkillTooltip(event, ${isAlly}, ${idx})" onmouseleave="scheduleTooltipHide()">
           💡 ${u.skillName} ${u.stars >= 3 && u.awakeningName ? `<span style="color:#fde047; font-weight:bold;">${u.awakeningName}</span>` : `<span style="font-size:0.65rem; color:var(--p5-yellow); float:right;">(詳情)</span>`}
         </div>
       </div>
@@ -3063,7 +3300,8 @@ function executeNemesisPeace() {
   playerRoster.unshift(fusedUnit);
 
   document.getElementById('nemesisModal').classList.add('hidden');
-  isPausedForEvent = false;
+  isPausedForEvent = true;
+  Branches.showChoice(fusedUnit,()=>{isPausedForEvent=false;updateUI();});
   updateUI();
 }
 
@@ -3254,13 +3492,14 @@ function activateFreeTedDemonize(freeted, team) {
   freeted.curSpd = Math.max(freeted.curSpd || freeted.spd, freeted.initialBattleSpd || freeted.spd);
   addShield(freeted, freeted, Math.round(freeted.maxHp * 0.25));
 
+  Branches.demon(freeted);
   triggerCutIn('⚡', `${freeted.name}・無慘大人`, '「在座各位都係垃圾！」全面鬼化覺醒', 'awakening');
   battleComboLogs.push(`⚡ ${freeted.name} 隊友全滅觸發【在座各位都係垃圾】全面鬼化！`);
   addLog(`⚡ <span class="tag-event">全面鬼化覺醒</span> <strong>${freeted.name}</strong> 隊友全滅，發動大招<strong>【在座各位都係垃圾】</strong>！移至 1 號位、<span class="tag-buff">🟢 常駐減傷 50%</span>、<span class="tag-buff">🟢 免疫降攻減速</span>，每擊殺 1 人將隨機復活 1 名隊友至 25% HP！`);
 }
 
 function startBattle() {
-  if (isBattling || playerRoster.length === 0) return;
+  if (isBattling || Branches.pending || playerRoster.length === 0) return;
   isBattling = true;
   isPausedForEvent = false;
   nemesisTriggeredThisBattle = false;
@@ -3297,7 +3536,7 @@ function startBattle() {
       e.hp = Math.max(1, Math.round(e.hp * 0.8));
       e.ghostHp = e.hp;
       e.shield = Math.round((e.shield || 0) * 0.8);
-      if (!e.immuneDebuff) e.curSpd = Math.max(50, (e.curSpd || e.spd) - 15);
+      if (Branches.allowDebuff(e,'spd')) e.curSpd = Math.max(50, (e.curSpd || e.spd) - 15);
     });
     updateUI();
   }
@@ -3347,7 +3586,7 @@ function startBattle() {
     if (actor.freetedSlowTurns && actor.freetedSlowTurns > 0) {
       actor.freetedSlowTurns--;
       if (actor.freetedSlowTurns === 0) {
-        actor.curSpd = actor.initialBattleSpd || actor.spd;
+        actor.curSpd = (actor.initialBattleSpd || actor.spd)+Branches.speedBonus(actor);
       }
     }
 
@@ -3358,12 +3597,13 @@ function startBattle() {
         addLog(`🕯️ <strong>${actor.name}</strong> 因隊友全滅被迫提早現身參戰！`);
         if (checkNemesisEasterEgg(actor)) return;
       } else {
-        const reqRitual = actor.stars >= 3 ? 2 : 3;
+        const reqRitual = Branches.legacy(actor) ? 2 : 3;
         addLog(`🔮 <strong>${actor.name}</strong> 正在場外進行柏克末日儀式 (${actor.ritualCount}/${reqRitual})...`);
         return;
       }
     }
 
+    Branches.turnStart(actor);
     executeUnitTurn(actor);
     checkAllFreeTedDemonize();
     updateUI();
@@ -3421,7 +3661,7 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false, ignoreShield
       const dcCrit = attacker.dcCritBonus || 0;
       const critChance = (shortAug ? 0.35 : 0) + (icyUnit ? 0.20 : 0) + dcCrit;
       if (critChance > 0 && Math.random() < critChance) {
-        const critMult = (icyUnit && icyUnit.stars >= 3) ? 1.9 : 1.6;
+        const critMult = (icyUnit && Branches.legacy(icyUnit)) ? 1.9 : 1.6;
         dmg = Math.round(dmg * critMult);
         isCrit = true;
       }
@@ -3472,6 +3712,9 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false, ignoreShield
       queueVisualEffect(target, 'shield', `🛡️破盾 -${absorbed}`);
     }
   }
+
+  // 分支時間線救援優先，避免消耗兩種保命。
+  if (Branches.preventLethal(target,dmg)) return totalDealt;
 
   // 4. 海克斯【破產保護令】
   if (target.isAlly && bankruptAvailable && target.hp - dmg <= 0) {
@@ -3539,6 +3782,7 @@ function dealDamage(attacker, target, rawDmg, isTrueDamage = false, ignoreShield
         revived.ghostHp = revived.hp;
         revived.shield = 0;
         revived.inRitual = false;
+        Branches.revive(attacker,revived);
         queueVisualEffect(revived, 'heal', `⚡復活 25% HP!`);
         battleComboLogs.push(`⚡ 無慘大人【鬼化掠奪】擊殺復活隊友 ${revived.name}`);
         addLog(`⚡ <span class="tag-heal">💚 無慘鬼化復活</span> <strong>${attacker.name}</strong> 擊殺 ${target.name}，將隊友 <strong>${revived.icon} ${revived.name}</strong> 復活至 <strong>25% HP (${revived.hp})</strong>（鬼化持續至戰鬥結束）！`);
@@ -3566,7 +3810,7 @@ function processDcTeslaTurnStart(actor, allies) {
   const aliveAllies = allies.filter(u => u.hp > 0);
   const otherAllies = aliveAllies.filter(u => u !== actor && !u.inRitual);
 
-  if (actor.stars >= 3) {
+  if (Branches.legacy(actor)) {
     actor.dcMode = 'BOTH';
     actor.dcCritBonus = 0.25;
     aliveAllies.forEach(a => a.atk = Math.round(a.atk * 1.15));
@@ -3637,21 +3881,22 @@ function executeUnitTurn(actor) {
   // 無魔力英雄 FreeTed (MaxMP = 0)：專注普攻與擴散閃電
   if (actor.noMpHero) {
     actor.basicAtkCount = (actor.basicAtkCount || 0) + 1;
-    const dmg = dealDamage(actor, target, actor.atk);
-    const lightningReq = actor.stars >= 3 ? 3 : 5;
+    const dmg = Branches.withKind(actor,'basic',()=>dealDamage(actor,target,actor.atk));
+    const lightningReq = Branches.legacy(actor) ? 3 : 5;
     addLog(`${actor.isAlly ? '🟢' : '🔴'} <strong>${actor.name}</strong> ${actor.isDemonized ? '【鬼化重擊】' : '普攻'} <strong>${target.name}</strong> <span class="tag-dmg">⚔️ -${dmg}</span> (${actor.basicAtkCount}/${lightningReq})`);
 
     if (actor.hp > 0 && actor.basicAtkCount % lightningReq === 0) {
       const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
       let totalSplash = 0;
       aliveOpps.forEach(e => {
-        totalSplash += dealDamage(actor, e, actor.atk * 0.50);
+        if (Branches.is(actor,'freeted','A')) e.shield=Math.max(0,(e.shield||0)-Branches.tuning(actor).shred);
+        totalSplash += Branches.withKind(actor,'lightning',()=>dealDamage(actor,e,actor.atk*.50));
       });
       // 降低敵方 3、4 號位 (index 2, 3) 40% 攻速 2 回合
       [2, 3].forEach(posIdx => {
         const backUnit = opponents[posIdx];
-        if (backUnit && backUnit.hp > 0 && !backUnit.immuneDebuff) {
-          backUnit.curSpd = Math.max(40, Math.round((backUnit.initialBattleSpd || backUnit.spd) * 0.60));
+        if (backUnit && backUnit.hp > 0 && Branches.allowDebuff(backUnit,'spd')) {
+          backUnit.curSpd = Math.max(40, Math.round((backUnit.initialBattleSpd || backUnit.spd) * 0.60))+Branches.speedBonus(backUnit);
           backUnit.freetedSlowTurns = 2;
         }
       });
@@ -3699,22 +3944,23 @@ function executeUnitTurn(actor) {
   } else {
     if (actor.id === 'andy_opp_fused') {
       const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
-      aliveOpps.forEach(e => dealDamage(actor, e, actor.atk));
+      aliveOpps.forEach(e => Branches.withKind(actor,'basic',()=>dealDamage(actor,e,actor.atk)));
       actor.mp = Math.min(actor.maxMp, actor.mp + 30 + extraMp);
       addLog(`☯️ <strong>${actor.name}</strong> 普攻橫掃敵方全體 <span class="tag-dmg">⚔️ 全體金融風暴</span>！`);
     } else {
-      const dmg = dealDamage(actor, target, actor.atk);
+      const dmg = Branches.withKind(actor,'basic',()=>dealDamage(actor,target,actor.atk));
       actor.mp = Math.min(actor.maxMp, actor.mp + 30 + extraMp);
+      if (Branches.is(actor,'icy_sis','A') && !actor.isWeakened && actor.hp>0 && target.hp>0) Branches.withKind(actor,'basic',()=>dealDamage(actor,target,actor.atk*Branches.tuning(actor).claw));
       addLog(`${actor.isAlly ? '🟢' : '🔴'} <strong>${actor.name}</strong> 普攻 <strong>${target.name}</strong> <span class="tag-dmg">⚔️ -${dmg}</span>`);
     }
   }
 
   if (actor.id === 'loki' && actor.hp > 0 && !isPausedForEvent) {
     const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
-    const targets = actor.stars >= 3 ? aliveOpps.slice(0, 2) : (getTarget(opponents) ? [getTarget(opponents)] : []);
+    const targets = Branches.legacy(actor) ? aliveOpps.slice(0, 2) : (getTarget(opponents) ? [getTarget(opponents)] : []);
     targets.forEach(mobiusTarget => {
-      const mDmg = dealDamage(actor, mobiusTarget, actor.atk * 0.55);
-      if (actor.stars >= 3 && !mobiusTarget.noMpHero) {
+      const mDmg = Branches.withKind(actor,'mobius',()=>dealDamage(actor,mobiusTarget,actor.atk*.55));
+      if (Branches.legacy(actor) && !mobiusTarget.noMpHero) {
         const stolen = Math.min(10, mobiusTarget.mp || 0);
         mobiusTarget.mp -= stolen;
         actor.mp = Math.min(actor.maxMp, actor.mp + stolen);
@@ -3730,15 +3976,15 @@ function castSkill(actor, allies, opponents, mainTarget) {
   const skillBoost = (actor.isAlly && playerAugments.some(a => a.id === 'aug_oil')) ? 1.2 : 1;
   const aliveOpps = opponents.filter(u => u.hp > 0 && !u.inRitual);
   const aliveAllies = allies.filter(u => u.hp > 0);
-  const isStar3 = actor.stars >= 3;
+  const isStar3 = Branches.legacy(actor);
 
   // 觸發 Persona 5 大招 / ★3 極意斜切特寫橫幅
-  if (isStar3 || actor.isBoss || actor.id === 'dc_tesla' || actor.id === 'andy_opp_fused') {
+  if (actor.stars >= 3 || actor.isBoss || actor.id === 'dc_tesla' || actor.id === 'andy_opp_fused') {
     triggerCutIn(
       actor.icon,
       actor.name,
-      isStar3 && actor.awakeningName ? `${actor.awakeningName}・${actor.skillName}` : actor.skillName,
-      actor.isBoss ? 'boss' : (isStar3 ? 'awakening' : 'ult')
+      actor.stars >= 3 && actor.awakeningName ? `${actor.awakeningName}・${actor.skillName}` : actor.skillName,
+      actor.isBoss ? 'boss' : (actor.stars >= 3 ? 'awakening' : 'ult')
     );
   }
 
@@ -3764,7 +4010,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
       let totalDmg = 0;
       aliveOpps.forEach(e => {
         totalDmg += dealDamage(actor, e, actor.atk * totalMult);
-        if (isStar3 && !e.immuneDebuff) {
+        if (isStar3 && Branches.allowDebuff(e,'spd')) {
           e.curSpd = Math.max(40, (e.curSpd || e.spd) - 20);
           e.spdDebuffTurns = 1;
         }
@@ -3810,7 +4056,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
     case 'mouse_sis': {
       const mpGain = isStar3 ? 55 : 40;
       const otherAllies = aliveAllies.filter(a => a !== actor && !a.noMpHero);
-      otherAllies.forEach(a => a.mp = Math.min(a.maxMp, a.mp + mpGain));
+      otherAllies.forEach(a => { Branches.overflow(actor,a,mpGain); a.mp = Math.min(a.maxMp, a.mp + mpGain); });
       aliveAllies.forEach(a => {
         recordHeal(actor, a, Math.round(90 * skillBoost));
         if (isStar3) addShield(actor, a, Math.round(120 * skillBoost));
@@ -3853,6 +4099,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
         actor.mp = Math.min(actor.maxMp, actor.mp + 50);
       }
       addLog(`🔫 <strong>${actor.name}</strong> 施放【${actor.skillName}】➔ ${mainTarget.name} <span class="tag-dmg">⚔️ -${dmg}${isStar3 ? ' (穿盾!)' : ''}</span>`);
+      if (Branches.is(actor,'shijie_sis','B')) Branches.hunt(actor,mainTarget);
       const dvAlly = aliveAllies.find(a => a.id === 'dv');
       if (dvAlly && mainTarget.hp > 0) {
         const dvDmg = dealDamage(dvAlly, mainTarget, dvAlly.atk * 1.2);
@@ -3876,13 +4123,13 @@ function castSkill(actor, allies, opponents, mainTarget) {
         const triggerBull = isStar3 || Math.random() < 0.55;
         const triggerReap = isStar3 || !triggerBull;
         if (triggerBull) {
+          Branches.market('bull');
           aliveAllies.forEach(a => a.atk = Math.round(a.atk * 1.25));
           aliveOpps.forEach(e => dealDamage(actor, e, actor.atk * 1.15 * skillBoost));
           addLog(`📈 <strong>${actor.name}</strong> 開出【牛市暴漲】！<span class="tag-buff">🟢 全隊攻+25%</span> <span class="tag-dmg">⚔️ 全體115%轟炸</span>`);
         }
         if (triggerReap && mainTarget && mainTarget.hp > 0) {
-          const dmg = dealDamage(actor, mainTarget, actor.atk * 1.65 * skillBoost);
-          recordHeal(actor, actor, dmg);
+          const dmg = Branches.reaping(()=>{const value=dealDamage(actor,mainTarget,actor.atk*1.65*skillBoost);recordHeal(actor,actor,value);return value;});
           addLog(`📉 <strong>${actor.name}</strong> 發動【割韭菜】➔ ${mainTarget.name} <span class="tag-dmg">⚔️ -${dmg}</span> <span class="tag-heal">💚 吸血+${dmg}</span>`);
         }
       }
@@ -3897,7 +4144,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
           a.curSpd = (a.curSpd || a.spd) + 15;
         }
       });
-      if (!mainTarget.immuneDebuff) {
+      if (Branches.allowDebuff(mainTarget,'atk')) {
         mainTarget.atk = Math.max(20, Math.round(mainTarget.atk * 0.85));
       }
       addLog(`🎤 <strong>${actor.name}</strong> 施放【${actor.skillName}】！<span class="tag-heal">💚 全隊+130 HP</span> <span class="tag-buff">🟢 全隊攻+15%</span> ${isStar3 ? '<span class="tag-buff">🛡️ 全隊+150盾 & 速+15</span>' : ''}`);
@@ -3924,7 +4171,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
           t.shield = Math.round(t.shield * 0.5);
         }
         dealDamage(actor, t, actor.atk * 1.45 * skillBoost);
-        if (!t.noMpHero) t.mp = Math.max(0, t.mp - mpDrain);
+        if (!t.noMpHero) { Branches.marketDrain(Math.min(t.mp||0,mpDrain)); t.mp = Math.max(0, t.mp - mpDrain); }
       });
       addLog(`💻 <strong>${actor.name}</strong> 執行【rm -rf /*】！<span class="tag-dmg">⚔️ ${isStar3 ? '全體削盾50%+' : '雙目標'}145%傷害</span> <span class="tag-nerf">🔴 扣魔-${mpDrain} MP</span>`);
       break;
@@ -3939,6 +4186,7 @@ function castSkill(actor, allies, opponents, mainTarget) {
     }
     case 'hugo': {
       const weakest = [...aliveOpps].sort((a, b) => a.hp - b.hp)[0] || mainTarget;
+      Branches.primary(weakest);
       const mult = isStar3 ? 2.75 : 2.10;
       const dmg = dealDamage(actor, weakest, actor.atk * mult * skillBoost);
       const hasPartner = aliveAllies.some(a => a.id === 'loki' || a.id === 'dashen');
@@ -4019,13 +4267,14 @@ function checkAndyRitual(allies, opponents) {
   const andy = allies.find(u => u.id === 'andy' && u.hp > 0 && u.inRitual);
   if (!andy) return;
   andy.ritualCount += 1;
-  const reqRitual = andy.stars >= 3 ? 2 : 3;
+  Branches.ritual(andy);
+  const reqRitual = Branches.legacy(andy) ? 2 : 3;
   addLog(`🕯️ <strong>${andy.name}</strong> 完成第 <strong>${andy.ritualCount} / ${reqRitual}</strong> 個柏克末日儀式！`);
 
   if (andy.ritualCount >= reqRitual) {
     andy.inRitual = false;
-    const mult = andy.stars >= 3 ? 3.0 : 2.2;
-    if (andy.stars >= 3) addShield(andy, andy, 300);
+    const mult = Branches.legacy(andy) ? 3.0 : 2.2;
+    if (Branches.legacy(andy)) addShield(andy, andy, 300);
     triggerCutIn('🛢️', andy.name, '柏克末日・負油價隕石降臨！', 'ult');
     battleComboLogs.push(`☄️ Andy安迪 完成儀式攜帶【負油價隕石】降臨`);
     addLog(`☄️ <span class="tag-event">末日降臨</span> <strong>Andy安迪</strong> 攜帶負油價隕石降臨戰場 <span class="tag-dmg">⚔️ 全體${Math.round(mult*100)}%轟炸</span>！`);
@@ -4033,6 +4282,7 @@ function checkAndyRitual(allies, opponents) {
       dealDamage(andy, e, andy.atk * mult);
     });
 
+    Branches.ritual(andy,true);
     checkNemesisEasterEgg(andy);
   }
 }
@@ -4182,7 +4432,8 @@ function renderCodexTab(tab) {
 
   const body = document.getElementById('codexBody');
   if (tab === 'heroes') {
-    const allHeroes = [FUSED_HERO_TEMPLATE, FINAL_BOSS_TEMPLATE, ...HERO_POOL];
+    const baemonCodex={...HERO_POOL.find(h=>h.id==='stock_opp'),icon:'👾',name:'股票奧本海默・寶怪轉職',title:'寶怪回歸專屬形態',traits:['狂熱信仰'],skillName:'寶怪應援・SHEESH打Call',skillDesc:'全隊回復 145 HP、附加 100 護盾並提升速度 +18；A／B 分支沿轉職前選擇。'};
+    const allHeroes = [FUSED_HERO_TEMPLATE, FINAL_BOSS_TEMPLATE, ...HERO_POOL,baemonCodex];
     body.innerHTML = `<div class="choices-grid">` + allHeroes.map(h => `
       <div class="choice-card p5-card-skew" style="cursor:default; ${h.id === 'andy_opp_fused' ? 'border-color:var(--p5-yellow);' : (h.id === 'boss_yeung' ? 'border-color:var(--p5-red);' : '')}">
         <div>
@@ -4264,6 +4515,6 @@ document.addEventListener('click',event => {
 window.onload = initGame;
 
 </script>
-<script>GameArt.preloadCutins();</script>
+<script>Branches.install();GameArt.preloadCutins();</script>
 </body>
 </html>
